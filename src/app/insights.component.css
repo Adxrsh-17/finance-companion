@@ -1,0 +1,41 @@
+@keyframes tw-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tw-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tw-animate-fade-up {
+  animation: tw-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tw-animate-pop {
+  animation: tw-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tw-delay-60 {
+  animation-delay: 60ms;
+}
+
+.tw-delay-100 {
+  animation-delay: 100ms;
+}
+
+.tw-delay-140 {
+  animation-delay: 140ms;
+}

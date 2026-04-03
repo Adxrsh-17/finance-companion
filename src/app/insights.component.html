@@ -1,0 +1,157 @@
+<div class="max-w-6xl mx-auto space-y-8 pb-8">
+  <!-- Page hero with greeting -->
+  <header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400">
+        Intelligence
+      </p>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+        {{ greeting() || 'Good day'}}, here's your financial story
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-3 text-sm max-w-xl leading-relaxed">
+        Personalized insights based on your spending patterns and financial habits.
+      </p>
+    </div>
+  </header>
+
+  <!-- Summary Stats Cards -->
+  <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600 dark:text-slate-400">Saved</p>
+          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+            {{ formatCurrency(stats().saved) }}
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {{ formatPct(stats().savedDelta) }} vs last period
+          </p>
+        </div>
+        <div class="h-12 w-12 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center">
+          <span class="text-emerald-600 dark:text-emerald-400 text-xl">📈</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600 dark:text-slate-400">Savings Rate</p>
+          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+            {{ stats().savingsRate }}%
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {{ stats().savingsRate >= 20 ? 'Above 20% benchmark' : 'Target: 20%' }}
+          </p>
+        </div>
+        <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+          <span class="text-blue-600 dark:text-blue-400 text-xl">💎</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600 dark:text-slate-400">Avg Daily Spend</p>
+          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+            {{ formatCurrency(stats().avgDaily) }}
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Per day average
+          </p>
+        </div>
+        <div class="h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center">
+          <span class="text-amber-600 dark:text-amber-400 text-xl">📊</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600 dark:text-slate-400">Biggest Day</p>
+          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1" *ngIf="stats().biggestDay">
+            {{ formatCurrency(stats().biggestDay[1]) }}
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" *ngIf="stats().biggestDay">
+            {{ stats().biggestDay[0] }}
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" *ngIf="!stats().biggestDay">
+            No data
+          </p>
+        </div>
+        <div class="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+          <span class="text-purple-600 dark:text-purple-400 text-xl">🎯</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Natural Language Stories -->
+  <section class="space-y-4">
+    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Your Financial Story</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div *ngFor="let story of stories()" 
+           class="rounded-xl border p-6 transition-all duration-200 hover:shadow-lg"
+           [class]="getStoryTypeClasses(story.type)">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <div class="h-10 w-10 rounded-full flex items-center justify-center text-lg"
+                 [style.background-color]="story.iconBg"
+                 [class]="getStoryIconClasses(story.type)">
+              {{ story.icon }}
+            </div>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-900 dark:text-white mb-2">
+              {{ story.title }}
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              {{ story.body }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Breakdown -->
+  <section class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Spending by Category</h2>
+    <div class="space-y-4">
+      <div *ngFor="let cat of breakdown()" class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-3 w-3 rounded-full" [style.background-color]="cat.color"></div>
+          <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ cat.name }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-slate-600 dark:text-slate-400">{{ cat.percent }}%</span>
+          <span class="text-sm font-mono font-semibold text-slate-900 dark:text-white">
+            {{ formatCurrency(cat.amount) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Wins -->
+  <section class="space-y-4" *ngIf="quickWins().length > 0">
+    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Quick Wins</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div *ngFor="let win of quickWins()" 
+           class="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl p-4 border border-cyan-200 dark:border-cyan-800">
+        <h3 class="font-semibold text-slate-900 dark:text-white mb-2">{{ win.head }}</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">{{ win.body }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Monthly Trend Chart -->
+  <section class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">6-Month Trend</h2>
+    <div class="h-64">
+      <canvas #monthlyTrendChart></canvas>
+    </div>
+  </section>
+</div>

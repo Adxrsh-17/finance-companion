@@ -1,3 +1,1633 @@
-/* You can add global styles to this file, and also import other style files */
-
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
 @import 'tailwindcss';
+
+@variant dark (&:where(.dark, .dark *));
+
+/* Base theme variables */
+:root {
+  --bg-app: #0d0f16;
+  --bg-sidebar: #111318;
+  --bg-card: rgba(124,58,237,0.08);
+  --border-card: rgba(124,58,237,0.15);
+  --text-primary: #ffffff;
+  --text-muted: #94a3b8;
+  --particle-color: rgba(6,182,212,0.5);
+  --particle-line: rgba(6,182,212,0.2);
+}
+
+/* Light mode overrides */
+html.light {
+  --bg-app: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-card: rgba(124,58,237,0.04);
+  --border-card: rgba(124,58,237,0.08);
+  --text-primary: #1f2937;
+  --text-muted: #64748b;
+  --particle-color: rgba(6,182,212,0.25);
+  --particle-line: rgba(6,182,212,0.12);
+}
+
+/* Force text colors - highest specificity */
+html.dark body {
+  background: var(--bg-app) !important;
+  color: #ffffff !important;
+}
+
+html.light body {
+  background: var(--bg-app) !important;
+  color: #1f2937 !important;
+}
+
+/* Sidebar specific styling with borders */
+.sidebar {
+  background: var(--bg-sidebar) !important;
+  border-right: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+html.light .sidebar {
+  background: var(--bg-sidebar) !important;
+  border-right: 2px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Header specific styling with borders */
+.topbar {
+  background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(124,58,237,0.85)) !important;
+  border: 2px solid rgba(124,58,237,0.4) !important;
+  border-bottom: 2px solid rgba(124,58,237,0.5) !important;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.3), 0 2px 10px rgba(0,0,0,0.1), 0 0 0 1px rgba(124,58,237,0.2) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+html.light .topbar {
+  background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.08)) !important;
+  border: 2px solid rgba(124,58,237,0.3) !important;
+  border-bottom: 2px solid rgba(124,58,237,0.4) !important;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.15), 0 2px 10px rgba(0,0,0,0.05), 0 0 0 1px rgba(124,58,237,0.1) !important;
+}
+
+/* Force PURE WHITE text in dark mode - highest specificity */
+html.dark * {
+  color: #ffffff !important;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+html.dark p,
+html.dark span,
+html.dark div,
+html.dark .text-primary,
+html.dark .panel-name,
+html.dark .cmd-value,
+html.dark .currency-switcher,
+html.dark .btn-glass,
+html.dark .filter-pill,
+html.dark .stat-card {
+  color: #ffffff !important;
+}
+
+html.dark .text-muted,
+html.dark .cmd-label {
+  color: #e2e8f0 !important;
+}
+
+/* Light mode text - enhanced visibility */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6 {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light p,
+html.light span,
+html.light div,
+html.light .text-primary,
+html.light .panel-name,
+html.light .cmd-value,
+html.light .currency-switcher,
+html.light .btn-glass,
+html.light .filter-pill,
+html.light .stat-card {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+html.light .text-muted,
+html.light .cmd-label {
+  color: #374151 !important;
+  font-weight: 600 !important;
+}
+
+/* Specific header fixes for light mode - MAXIMUM SPECIFICITY */
+html.light .topbar {
+  background: #ffffff !important;
+  border-bottom: 2px solid #d1d5db !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+html.light .topbar *,
+html.light .topbar h1,
+html.light .topbar h2,
+html.light .topbar h3,
+html.light .topbar h4,
+html.light .topbar h5,
+html.light .topbar h6,
+html.light .topbar p,
+html.light .topbar span,
+html.light .topbar div {
+  color: #000000 !important;
+}
+
+html.light .topbar h1 {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+  font-size: 3rem !important;
+}
+
+html.light .topbar p {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light .sidebar {
+  background: #ffffff !important;
+  border-right: 2px solid #d1d5db !important;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.05) !important;
+}
+
+html.light .sidebar *,
+html.light .sidebar .font-bold,
+html.light .sidebar .text-xs,
+html.light .sidebar span,
+html.light .sidebar div {
+  color: #000000 !important;
+}
+
+html.light .sidebar .font-bold {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light .sidebar .text-xs {
+  color: #374151 !important;
+  font-weight: 700 !important;
+}
+
+/* Command bar light mode fixes - MAXIMUM SPECIFICITY */
+html.light .command-bar {
+  background: #ffffff !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+html.light .command-bar *,
+html.light .command-bar span,
+html.light .command-bar div {
+  color: #000000 !important;
+}
+
+html.light .cmd-label {
+  color: #1f2937 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light .cmd-value {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light .cmd-pill {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  border-color: #d1d5db !important;
+  background: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+html.light .cmd-pill:hover {
+  color: #000000 !important;
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  font-weight: 800 !important;
+}
+
+html.light .cmd-pill.active {
+  color: #ffffff !important;
+  background: #06b6d4 !important;
+  border-color: #0891b2 !important;
+  font-weight: 800 !important;
+}
+
+/* Light mode backgrounds with better contrast */
+html.light .sidebar {
+  background: #ffffff !important;
+  border-right: 2px solid #d1d5db !important;
+}
+
+html.light .topbar {
+  background: #ffffff !important;
+  border-bottom: 2px solid #d1d5db !important;
+}
+
+html.light .stat-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02)) !important;
+  border: 1px solid rgba(124,58,237,0.1) !important;
+}
+
+html.light .command-bar {
+  background: rgba(124,58,237,0.02) !important;
+  border-bottom: 1px solid rgba(124,58,237,0.08) !important;
+}
+
+/* Transaction table with violet theme */
+.transaction-table {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(124,58,237,0.04)) !important;
+  border: 1px solid rgba(124,58,237,0.15) !important;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+html.light .transaction-table {
+  background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(124,58,237,0.02)) !important;
+  border: 1px solid rgba(124,58,237,0.08) !important;
+}
+
+/* Transaction filters with violet theme */
+.transaction-filters {
+  background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.03)) !important;
+  border: 1px solid rgba(124,58,237,0.12) !important;
+  border-radius: 16px;
+}
+
+html.light .transaction-filters {
+  background: linear-gradient(135deg, rgba(124,58,237,0.03), rgba(124,58,237,0.01)) !important;
+  border: 1px solid rgba(124,58,237,0.06) !important;
+}
+
+html.light .filter-pill {
+  color: #000000 !important;
+  border: 2px solid #d1d5db !important;
+  background: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.light .filter-pill:hover {
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  color: #000000 !important;
+}
+
+html.light .filter-pill.active {
+  background: #06b6d4 !important;
+  border-color: #0891b2 !important;
+  color: #ffffff !important;
+}
+
+html.light .btn-glass {
+  color: #000000 !important;
+  border: 2px solid #d1d5db !important;
+  background: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.light .btn-glass:hover {
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  color: #000000 !important;
+}
+
+html.light .currency-switcher {
+  color: #000000 !important;
+  border: 2px solid #d1d5db !important;
+  background: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.light .currency-switcher:hover {
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  color: #000000 !important;
+}
+
+html.light .sidebar-user-panel {
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+}
+
+html.light .panel-name {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+html.light .panel-logout {
+  color: #000000 !important;
+  border: 2px solid #d1d5db !important;
+  background: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.light .panel-logout:hover {
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  color: #000000 !important;
+}
+
+/* Filter pills with white text in dark mode */
+.filter-pill {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+
+html.dark .filter-pill:hover {
+  border-color: rgba(6,182,212,0.5) !important;
+  background: rgba(6,182,212,0.1) !important;
+  color: #ffffff !important;
+}
+
+html.dark .filter-pill.active {
+  background: linear-gradient(135deg, rgba(6,182,212,0.3), rgba(124,58,237,0.3)) !important;
+  border-color: rgba(6,182,212,0.6) !important;
+  color: #ffffff !important;
+}
+
+html.light .filter-pill {
+  color: #1f2937 !important;
+  border: 1px solid rgba(0,0,0,0.2) !important;
+  background: rgba(0,0,0,0.05) !important;
+}
+
+html.light .filter-pill:hover {
+  border-color: rgba(6,182,212,0.5) !important;
+  background: rgba(6,182,212,0.1) !important;
+  color: #1f2937 !important;
+}
+
+html.light .filter-pill.active {
+  background: linear-gradient(135deg, rgba(6,182,212,0.3), rgba(124,58,237,0.3)) !important;
+  border-color: rgba(6,182,212,0.6) !important;
+  color: #1f2937 !important;
+}
+
+/* Component specific fixes */
+.stat-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.command-bar {
+  background: rgba(255,255,255,0.02) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+html.light .command-bar {
+  background: rgba(0,0,0,0.04) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+.cmd-label {
+  color: var(--text-muted) !important;
+}
+
+.cmd-value {
+  color: var(--text-primary) !important;
+}
+
+.currency-switcher {
+  color: var(--text-primary) !important;
+}
+
+.btn-glass {
+  color: var(--text-primary) !important;
+}
+
+.filter-pill {
+  color: var(--text-primary) !important;
+}
+
+/* Sidebar user panel */
+.sidebar-user-panel {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+}
+
+html.light .sidebar-user-panel {
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+.panel-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.panel-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.panel-name-block {
+  flex: 1;
+}
+
+.panel-name {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary) !important;
+  margin-bottom: 4px;
+}
+
+.panel-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 16px 0;
+}
+
+html.light .panel-divider {
+  background: rgba(0,0,0,0.1);
+}
+
+.panel-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text-primary) !important;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html.light .panel-logout {
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.panel-logout:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(6,182,212,0.3);
+}
+
+html.light .panel-logout:hover {
+  background: rgba(0,0,0,0.1);
+  border-color: rgba(6,182,212,0.3);
+}
+
+/* Rest of the existing styles... */
+
+html.light .topbar {
+  background: var(--bg-sidebar) !important;
+  border-color: var(--border-card) !important;
+}
+
+html.light .stat-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-card) !important;
+}
+
+html.light .command-bar {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+html.light .cmd-pill {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+}
+
+html.light .cmd-pill:hover {
+  background: rgba(0,0,0,0.05) !important;
+  color: var(--text-primary) !important;
+}
+
+html.light .cmd-pill.active {
+  background: rgba(6,182,212,0.1) !important;
+  border-color: rgba(6,182,212,0.2) !important;
+  color: #06b6d4 !important;
+}
+
+html.light .currency-switcher {
+  background: rgba(0,0,0,0.05) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+html.light .currency-switcher:hover,
+html.light .currency-switcher.open {
+  border-color: rgba(6,182,212,0.3) !important;
+  background: rgba(6,182,212,0.05) !important;
+  color: #06b6d4 !important;
+}
+
+html.light .currency-menu {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.15) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+}
+
+html.light .currency-option:hover {
+  background: rgba(6,182,212,0.05) !important;
+}
+
+html.light .currency-option.active {
+  background: rgba(6,182,212,0.08) !important;
+}
+
+html.light .btn-glass {
+  background: rgba(0,0,0,0.05) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+html.light .btn-glass:hover {
+  background: rgba(0,0,0,0.08) !important;
+  border-color: rgba(6,182,212,0.3) !important;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+/* Premium animations */
+@keyframes glow {
+  0%   { box-shadow: 0 0 4px currentColor, 0 0 8px currentColor; }
+  100% { box-shadow: 0 0 8px currentColor, 0 0 20px currentColor, 0 0 35px currentColor; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.4); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes borderRotate {
+  0%   { background: linear-gradient(0deg,   rgba(6,182,212,0.5), rgba(124,58,237,0.2)); }
+  50%  { background: linear-gradient(180deg, rgba(124,58,237,0.5), rgba(6,182,212,0.2)); }
+  100% { background: linear-gradient(360deg, rgba(6,182,212,0.5), rgba(124,58,237,0.2)); }
+}
+
+@keyframes scanline {
+  0%, 100% { opacity: 0.4; transform: scaleX(0.6); }
+  50%       { opacity: 1;   transform: scaleX(1); }
+}
+
+.glow { animation: glow 2s ease-in-out infinite alternate; }
+
+/* Glassmorphism utilities */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+/* Full-page particle canvas */
+#bgParticles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* Every layout element must sit above canvas */
+.sidebar, .main-content, .topbar { 
+  position: relative; 
+  z-index: 1; 
+}
+
+/* Premium button styles */
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-glass:hover {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(6,182,212,0.45);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(6,182,212,0.15);
+  transform: translateY(-1px);
+}
+
+.btn-glass:active { 
+  transform: translateY(0); 
+}
+
+/* Button variants */
+.btn-primary {
+  background: linear-gradient(135deg, #06b6d4, #7c3aed);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(6,182,212,0.25);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 28px rgba(6,182,212,0.4);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-danger {
+  background: rgba(244,63,94,0.08);
+  border-color: rgba(244,63,94,0.25);
+  color: #f43f5e;
+}
+
+.btn-danger:hover {
+  background: rgba(244,63,94,0.15);
+  border-color: rgba(244,63,94,0.5);
+  box-shadow: 0 0 16px rgba(244,63,94,0.2);
+}
+
+.btn-success {
+  background: rgba(16,185,129,0.08);
+  border-color: rgba(16,185,129,0.25);
+  color: #10b981;
+}
+
+.btn-success:hover {
+  background: rgba(16,185,129,0.14);
+  border-color: rgba(16,185,129,0.5);
+  box-shadow: 0 0 16px rgba(16,185,129,0.2);
+}
+
+/* Filter pills */
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  border-color: rgba(6,182,212,0.3);
+  color: rgba(255,255,255,0.85);
+  background: rgba(6,182,212,0.06);
+}
+
+.filter-pill.active {
+  background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(124,58,237,0.2));
+  border-color: rgba(6,182,212,0.45);
+  color: #06b6d4;
+  font-weight: 600;
+  box-shadow: 0 0 14px rgba(6,182,212,0.12);
+}
+
+/* Status badges - NO GOLD */
+.role-badge-admin { 
+  font-size: 10px; 
+  font-weight: 600; 
+  padding: 2px 8px; 
+  border-radius: 99px; 
+  letter-spacing: 0.06em; 
+  background: rgba(6,182,212,0.10); 
+  color: #06b6d4; 
+  border: 1px solid rgba(6,182,212,0.22); 
+}
+
+.role-badge-viewer { 
+  font-size: 10px; 
+  font-weight: 600; 
+  padding: 2px 8px; 
+  border-radius: 99px; 
+  letter-spacing: 0.06em; 
+  background: rgba(148,163,184,0.10); 
+  color: #94a3b8; 
+  border: 1px solid rgba(148,163,184,0.20); 
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-ring 1.8s ease-in-out infinite;
+}
+
+/* Stat cards with violet glassmorphism */
+.stat-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.06)) !important;
+  border: 1px solid rgba(124,58,237,0.2) !important;
+  border-radius: 16px;
+  padding: 20px 22px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(8px);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 16px 0 0 16px;
+}
+
+.stat-card.balance::before { 
+  background: #06b6d4; 
+  box-shadow: 0 0 12px #06b6d4; 
+}
+
+.stat-card.income::before { 
+  background: #10b981; 
+  box-shadow: 0 0 12px #10b981; 
+}
+
+.stat-card.expense::before { 
+  background: #f43f5e; 
+  box-shadow: 0 0 12px #f43f5e; 
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(124,58,237,0.2);
+  border-color: rgba(124,58,237,0.3);
+}
+
+/* Subtle violet glow orb in card corner */
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  opacity: 0.08;
+  filter: blur(30px);
+  background: rgba(124,58,237,0.6);
+}
+
+html.light .stat-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02)) !important;
+  border: 1px solid rgba(124,58,237,0.1) !important;
+}
+
+html.light .stat-card:hover {
+  box-shadow: 0 12px 40px rgba(124,58,237,0.15);
+  border-color: rgba(124,58,237,0.2);
+}
+
+/* Sidebar panel */
+.sidebar-user-panel {
+  margin: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(6,182,212,0.15);
+  background: rgba(6,182,212,0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-user-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(6,182,212,0.6),
+    rgba(124,58,237,0.4),
+    transparent);
+  animation: scanline 3s ease-in-out infinite;
+}
+
+.panel-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.panel-inner { 
+  position: relative; 
+  z-index: 2; 
+  padding: 14px; 
+}
+
+.panel-identity { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  margin-bottom: 12px; 
+}
+
+.panel-avatar {
+  width: 38px; 
+  height: 38px; 
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4, #7c3aed);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 13px; 
+  font-weight: 600; 
+  color: #fff; 
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(6,182,212,0.2);
+}
+
+.panel-name-block { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 3px; 
+  min-width: 0; 
+}
+
+.panel-name {
+  font-size: 13px; 
+  font-weight: 600; 
+  color: var(--text-primary);
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.panel-divider { 
+  height: 1px; 
+  background: rgba(255,255,255,0.06); 
+  margin-bottom: 11px; 
+}
+
+html.light .panel-divider { 
+  background: rgba(0,0,0,0.07); 
+}
+
+.panel-label {
+  font-size: 10px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.09em;
+  color: var(--text-muted); 
+  margin: 0 0 6px;
+}
+
+.panel-select {
+  width: 100%; 
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  color: #cbd5e1; 
+  font-size: 12px; 
+  padding: 7px 10px;
+  margin-bottom: 10px; 
+  cursor: pointer; 
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+html.light .panel-select {
+  background-color: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.10);
+  color: #334155;
+}
+
+.panel-select:focus { 
+  border-color: rgba(6,182,212,0.4); 
+}
+
+.panel-logout {
+  width: 100%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: 6px; 
+  padding: 8px; 
+  border-radius: 8px;
+  font-size: 12px; 
+  font-weight: 500; 
+  cursor: pointer;
+  color: #f43f5e;
+  background: rgba(244,63,94,0.05);
+  border: 1px solid rgba(244,63,94,0.15);
+  transition: all 0.2s ease;
+}
+
+.panel-logout:hover {
+  background: rgba(244,63,94,0.10);
+  border-color: rgba(244,63,94,0.35);
+}
+
+/* Typography and inputs */
+input, select {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #e2e8f0;
+  padding: 9px 14px;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: rgba(6,182,212,0.5);
+  box-shadow: 0 0 0 3px rgba(6,182,212,0.08);
+}
+
+html.light input, html.light select {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.10);
+  color: #1f2937;
+}
+
+/* Apply theme vars */
+.sidebar { 
+  background: var(--bg-sidebar); 
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+.topbar { 
+  background: var(--bg-sidebar); 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.stat-card { 
+  background: var(--bg-card); 
+  border-color: var(--border-card); 
+}
+
+/* Command Bar */
+.command-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 44px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 24px;
+  overflow-x: auto;
+}
+
+html.light .command-bar {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.06);
+}
+
+.cmd-section {
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  flex-shrink: 0;
+}
+
+.cmd-label {
+  font-size: 10px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.09em;
+  color: var(--text-muted); 
+  white-space: nowrap;
+}
+
+.cmd-divider {
+  width: 1px; 
+  height: 20px;
+  background: rgba(255,255,255,0.08);
+  margin: 0 16px; 
+  flex-shrink: 0;
+}
+
+html.light .cmd-divider { 
+  background: rgba(0,0,0,0.08); 
+}
+
+.cmd-pills { 
+  display: flex; 
+  gap: 4px; 
+}
+
+.cmd-pill {
+  padding: 4px 12px; 
+  border-radius: 99px; 
+  font-size: 12px;
+  font-weight: 500; 
+  cursor: pointer; 
+  transition: all 0.18s;
+  border: 1px solid transparent;
+  background: transparent; 
+  color: var(--text-muted);
+}
+
+.cmd-pill:hover { 
+  color: var(--text-primary); 
+  background: rgba(255,255,255,0.05); 
+}
+
+.cmd-pill.active {
+  background: rgba(6,182,212,0.15);
+  border-color: rgba(6,182,212,0.35);
+  color: #06b6d4; 
+  font-weight: 600;
+}
+
+.cmd-value {
+  font-size: 12px; 
+  color: var(--text-primary); 
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cmd-role { 
+  margin-left: auto; 
+}
+
+.cmd-mode-badge {
+  display: inline-flex; 
+  align-items: center; 
+  gap: 5px;
+  font-size: 11px; 
+  font-weight: 500; 
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.admin-mode {
+  background: rgba(16,185,129,0.1);
+  color: #10b981;
+  border: 1px solid rgba(16,185,129,0.2);
+}
+
+.viewer-mode {
+  background: rgba(148,163,184,0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148,163,184,0.18);
+}
+
+.mode-dot {
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* Currency Switcher */
+.currency-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: all 0.2s;
+  user-select: none;
+  z-index: 10000;
+}
+
+.currency-switcher:hover,
+.currency-switcher.open {
+  border-color: rgba(6,182,212,0.4);
+  background: rgba(6,182,212,0.07);
+  color: #06b6d4;
+}
+
+.curr-flag { 
+  font-size: 15px; 
+}
+
+.curr-code { 
+  font-size: 12px; 
+  font-weight: 600; 
+  letter-spacing: 0.04em; 
+}
+
+.currency-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: #1a1d27;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 999;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+
+html.light .currency-menu {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.currency-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.currency-option:hover {
+  background: rgba(6,182,212,0.08);
+}
+
+html.light .currency-option:hover {
+  background: rgba(6,182,212,0.05);
+}
+
+.currency-option.active {
+  background: rgba(6,182,212,0.12);
+}
+
+html.light .currency-option.active {
+  background: rgba(6,182,212,0.08);
+}
+
+.currency-option.active .opt-code { 
+  color: #06b6d4; 
+}
+
+.opt-flag  { 
+  font-size: 18px; 
+  flex-shrink: 0; 
+}
+
+.opt-info  { 
+  display: flex; 
+  flex-direction: column; 
+  flex: 1; 
+  min-width: 0; 
+}
+
+.opt-code  { 
+  font-size: 12px; 
+  font-weight: 600; 
+  color: var(--text-primary); 
+}
+
+.opt-label { 
+  font-size: 11px; 
+  color: var(--text-muted); 
+}
+
+.opt-symbol { 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: var(--text-muted); 
+}
+
+/* Typography and inputs */
+input, select {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #e2e8f0;
+  padding: 9px 14px;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: rgba(6,182,212,0.5);
+  box-shadow: 0 0 0 3px rgba(6,182,212,0.08);
+}
+
+html.light input, html.light select {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.10);
+  color: #1f2937;
+}
+
+/* Transaction form styling - Enhanced visibility */
+.transaction-form input,
+.transaction-form select,
+.transaction-form textarea {
+  background: rgba(255,255,255,0.08) !important;
+  border: 2px solid rgba(255,255,255,0.2) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+
+html.light .transaction-form input,
+html.light .transaction-form select,
+html.light .transaction-form textarea {
+  background: rgba(0,0,0,0.05) !important;
+  border: 2px solid rgba(0,0,0,0.15) !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+.transaction-form input:focus,
+.transaction-form select:focus,
+.transaction-form textarea:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.15) !important;
+  background: rgba(255,255,255,0.12) !important;
+}
+
+html.light .transaction-form input:focus,
+html.light .transaction-form select:focus,
+html.light .transaction-form textarea:focus {
+  background: rgba(0,0,0,0.08) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.1) !important;
+}
+
+/* Transaction form labels */
+.transaction-form label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+html.light .transaction-form label {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+/* Transaction filter dropdowns - Enhanced visibility */
+.transaction-filter select,
+.transaction-filter input {
+  background: rgba(255,255,255,0.12) !important;
+  border: 2px solid rgba(255,255,255,0.3) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+  min-height: 44px !important;
+}
+
+html.light .transaction-filter select,
+html.light .transaction-filter input {
+  background: rgba(0,0,0,0.08) !important;
+  border: 2px solid rgba(0,0,0,0.2) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+.transaction-filter select:focus,
+.transaction-filter input:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.15) !important;
+  background: rgba(255,255,255,0.18) !important;
+}
+
+html.light .transaction-filter select:focus,
+html.light .transaction-filter input:focus {
+  background: rgba(0,0,0,0.12) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.1) !important;
+}
+
+/* Transaction filter labels */
+.transaction-filter label {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+html.light .transaction-filter label {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+/* Specific transaction component styling */
+app-transaction input,
+app-transaction select,
+app-transaction textarea {
+  background: rgba(255,255,255,0.1) !important;
+  border: 2px solid rgba(255,255,255,0.25) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+
+html.light app-transaction input,
+html.light app-transaction select,
+html.light app-transaction textarea {
+  background: rgba(0,0,0,0.06) !important;
+  border: 2px solid rgba(0,0,0,0.18) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+app-transaction input:focus,
+app-transaction select:focus,
+app-transaction textarea:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.15) !important;
+  background: rgba(255,255,255,0.15) !important;
+}
+
+html.light app-transaction input:focus,
+html.light app-transaction select:focus,
+html.light app-transaction textarea:focus {
+  background: rgba(0,0,0,0.1) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.1) !important;
+}
+
+app-transaction label {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+html.light app-transaction label {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+/* FORCE ALL DROPDOWNS AND INPUTS TO BE VISIBLE - MAXIMUM SPECIFICITY */
+html.dark body input,
+html.dark body select,
+html.dark body textarea,
+html.light body input,
+html.light body select,
+html.light body textarea {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Specific dropdown fixes */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  padding-right: 36px !important;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.15) !important;
+}
+
+html.light select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.1) !important;
+}
+
+/* Focus only on form elements - not universal */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Add violet shadow to all form inputs */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+textarea {
+  box-shadow: 0 2px 8px rgba(124,58,237,0.12) !important;
+}
+
+html.light input[type="text"],
+html.light input[type="number"],
+html.light input[type="date"],
+html.light input[type="search"],
+html.light textarea {
+  box-shadow: 0 2px 8px rgba(124,58,237,0.08) !important;
+}
+
+/* Force text visibility in all inputs */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  color: #ffffff !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  color: #000000 !important;
+}
+
+/* Transaction form labels visibility */
+html.dark label,
+html.light label {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+html.dark label {
+  color: #ffffff !important;
+}
+
+html.light label {
+  color: #000000 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* FINAL OVERRIDE - MAXIMUM SPECIFICITY FOR LIGHT MODE */
+html.light body .topbar *,
+html.light body .sidebar *,
+html.light body .command-bar * {
+  color: #000000 !important;
+}
+
+html.light body .topbar h1 {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 3rem !important;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
+}
+
+html.light body .topbar p {
+  color: #1f2937 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+html.light body .sidebar .font-bold {
+  color: #000000 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+html.light body .sidebar .text-xs {
+  color: #374151 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+html.light body .command-bar .cmd-label {
+  color: #1f2937 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+html.light body .command-bar .cmd-value {
+  color: #000000 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+html.light body .command-bar .cmd-pill {
+  color: #1f2937 !important;
+  font-weight: 800 !important;
+  border-color: #d1d5db !important;
+  background: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+html.light body .command-bar .cmd-pill:hover {
+  color: #000000 !important;
+  border-color: #06b6d4 !important;
+  background: #f0f9ff !important;
+  font-weight: 800 !important;
+}
+
+html.light body .command-bar .cmd-pill.active {
+  color: #ffffff !important;
+  background: #06b6d4 !important;
+  border-color: #0891b2 !important;
+  font-weight: 800 !important;
+}
+
+/* Dark mode header text with violet background */
+html.dark body .topbar h1 {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
+}
+
+html.dark body .topbar p {
+  color: #e2e8f0 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+html.dark body .sidebar .font-bold {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+html.dark body .sidebar .text-xs {
+  color: #e2e8f0 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}

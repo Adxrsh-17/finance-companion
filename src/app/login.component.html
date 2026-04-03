@@ -1,0 +1,121 @@
+<div class="login-container">
+  <!-- LEFT COLUMN - Hero Panel -->
+  <div class="hero-panel">
+    <!-- Dot Grid Background -->
+    <div class="dot-grid"></div>
+    
+    <!-- Content -->
+    <div class="hero-content">
+      <!-- Logo -->
+      <div class="hero-logo">
+        <div class="logo-mark">Z</div>
+      </div>
+      
+      <!-- Headlines -->
+      <h1 class="hero-title">Your Financial Companion</h1>
+      <p class="hero-subtitle">Track expenses, monitor investments, and achieve your financial goals with intelligent insights.</p>
+      
+      <!-- Stats Pills -->
+      <div class="stats-pills">
+        <div class="pill">
+          <div class="pill-number">10k+</div>
+          <div class="pill-label">Users</div>
+        </div>
+        <div class="pill">
+          <div class="pill-number">Bank-grade</div>
+          <div class="pill-label">Security</div>
+        </div>
+        <div class="pill">
+          <div class="pill-number">Real-time</div>
+          <div class="pill-label">Sync</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIGHT COLUMN - Login Form Panel -->
+  <div class="form-panel">
+    <div class="form-container">
+      <!-- Logo Icon -->
+      <div class="form-logo">
+        <div class="logo-icon">Z</div>
+      </div>
+      
+      <!-- Brand Label -->
+      <div class="brand-label">ZORVYN FINANCE</div>
+      
+      <!-- Welcome Heading -->
+      <h2 class="form-title">Welcome back</h2>
+      
+      <!-- Login Form -->
+      <form class="login-form" (ngSubmit)="onLoginSubmit($event)">
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <div class="input-wrapper">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input"
+              placeholder="Enter your email address"
+              required
+              [(ngModel)]="credentials.email"
+            />
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input"
+              placeholder="Enter your password"
+              required
+              [(ngModel)]="credentials.password"
+            />
+          </div>
+          <div class="forgot-password">
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-button" [disabled]="isLoading">
+          <span class="button-text" *ngIf="!isLoading">Sign In</span>
+          <span class="button-text" *ngIf="isLoading">Signing in...</span>
+          <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+          <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading" style="animation: spin 1s linear infinite;">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+          </svg>
+        </button>
+      </form>
+      
+      <!-- Divider -->
+      <div class="divider">
+        <span class="divider-text">Or continue as</span>
+      </div>
+      
+      <!-- Quick Access Buttons -->
+      <div class="quick-access">
+        <button class="quick-btn admin-btn" (click)="quickLogin('administrator')">
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Admin
+        </button>
+        <button class="quick-btn user-btn" (click)="quickLogin('user')">
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
