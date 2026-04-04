@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, computed, AfterViewInit, HostListener } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject, signal, computed, AfterViewInit, HostListener, effect } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FinanceStateService } from './services/finance-state.service';
 import { DataService } from './services/data.service';
 import { RoleService } from './services/role.service';
 import { ToastService } from './services/toast.service';
 import { ToastComponent } from './components/toast.component';
-import { Observable, combineLatest } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CurrencyService } from './services/currency.service';
 import { LayoutComponent } from './layout/layout.component';
@@ -34,20 +33,14 @@ export class AppComponent implements AfterViewInit {
   private roleService = inject(RoleService);
   private toastService = inject(ToastService);
   public finance = inject(FinanceStateService);
-  private router = inject(Router);
   public currencyService = inject(CurrencyService);
 
   // Convert observables to signals for template access
   currentUser = toSignal(this.dataService.currentUser$, { initialValue: null });
   allUsers = toSignal(this.dataService.allUsers$, { initialValue: [] });
 
-  // Role management - updated to use new RoleService
-  role$ = this.roleService.role$;
-  isAdmin$ = this.roleService.isAdmin$;
-  isViewer$ = this.roleService.isViewer$;
+  // Role state used by shell widgets
   currentRole = toSignal(this.roleService.role$, { initialValue: 'viewer' });
-  isAdmin = toSignal(this.roleService.isAdmin$, { initialValue: false });
-  isViewer = toSignal(this.roleService.isViewer$, { initialValue: true });
 
   // Custom date range state
   showCustomDatePicker = signal(false);
@@ -69,6 +62,10 @@ export class AppComponent implements AfterViewInit {
   constructor() {
     // Initialize theme based on system preference or saved preference
     this.initializeTheme();
+
+    effect(() => {
+      this.finance.setRole(this.currentRole());
+    });
   }
 
   ngOnInit() {
@@ -381,17 +378,6 @@ export class AppComponent implements AfterViewInit {
     this.toastService.success(`Switched to user: ${userId}`);
   }
 
-  // Role switching - updated for new role types
-  onRoleChange(newRole: 'admin' | 'viewer') {
-    const oldRole = this.roleService.getCurrentRole();
-    this.roleService.setRole(newRole);
-
-    const roleText = newRole === 'admin' ? 'Admin' : 'Viewer';
-    const permissionsText = newRole === 'admin' ? 'full access enabled' : 'view-only mode';
-
-    this.toastService.info(`Switched to ${roleText} mode — ${permissionsText}`);
-  }
-
   // Format percentage values
   formatPct(val: number): string {
     return (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
@@ -399,21 +385,11 @@ export class AppComponent implements AfterViewInit {
 
   // Logout
   logout() {
-    // Clear authentication state
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userEmail');
-    
-    // Clear user state in data service
     this.dataService.clearCurrentUser();
-    
-    // Reset role to default
-    this.roleService.setRole('viewer');
-    
+    this.finance.setRole('viewer');
+    this.roleService.logout();
+
     this.toastService.success('Logged out successfully');
-    
-    // Navigate to login page using Angular Router
-    this.router.navigate(['/login']);
   }
 
   // Get summary data for current date range

@@ -57,6 +57,7 @@
               <div class="panel-avatar">{{ currentUser()?.avatar || 'AP' }}</div>
               <div class="panel-name-block">
                 <span class="panel-name">{{ currentUser()?.name }}</span>
+                <span class="panel-role">{{ currentRole() === 'admin' ? 'Admin' : 'Viewer' }}</span>
               </div>
             </div>
 
@@ -94,9 +95,8 @@
             <p class="text-xl mt-2" style="color: var(--text-muted)">{{ headerRangeLabel() }}</p>
           </div>
 
-          <!-- RIGHT: Empty space or minimal elements -->
+          <!-- RIGHT: Session controls -->
           <div class="flex items-center gap-2">
-            <!-- User avatar only -->
             <div class="relative">
               <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white glow"
                    style="background: linear-gradient(135deg, #06b6d4, #7c3aed);">

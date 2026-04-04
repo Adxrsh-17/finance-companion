@@ -7,24 +7,30 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { FinanceStateService } from './services/finance-state.service';
 import type { SortField, Transaction, TransactionType } from './models/transaction.model';
 import { CATEGORY_OPTIONS } from './data/mock-transactions';
+import { RoleService } from './services/role.service';
+import { HasRoleDirective } from './directives/permission.directive';
 
 @Component({
   selector: 'app-transaction',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HasRoleDirective],
   templateUrl: './transaction.component.html',
   styleUrl: './transaction.component.css',
 })
 export class TransactionComponent implements OnInit, OnDestroy {
   protected readonly finance = inject(FinanceStateService);
+  private readonly roleService = inject(RoleService);
 
   protected readonly categoryOptions = CATEGORY_OPTIONS;
+  protected readonly currentRole = toSignal(this.roleService.role$, { initialValue: 'viewer' as const });
+  protected readonly isAdmin = computed(() => this.currentRole() === 'admin');
 
   private readonly searchSubject = new Subject<string>();
   private searchSub?: Subscription;
@@ -63,6 +69,13 @@ export class TransactionComponent implements OnInit, OnDestroy {
     effect(() => {
       this.finance.filteredTransactions();
       this.page.set(1);
+    });
+
+    effect(() => {
+      const role = this.currentRole();
+      if (role === 'viewer' && this.showModal) {
+        this.closeModal();
+      }
     });
   }
 
@@ -106,7 +119,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
   }
 
   protected openCreate(): void {
-    if (!this.finance.isAdmin()) return;
+    if (!this.isAdmin()) return;
     this.editingId = null;
     this.formDate = new Date().toISOString().slice(0, 10);
     this.formAmount = null;
@@ -118,7 +131,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
   }
 
   protected openEdit(tx: Transaction): void {
-    if (!this.finance.isAdmin()) return;
+    if (!this.isAdmin()) return;
     this.editingId = tx.id;
     this.formDate = tx.date;
     this.formAmount = tx.amount;
@@ -131,9 +144,15 @@ export class TransactionComponent implements OnInit, OnDestroy {
 
   protected closeModal(): void {
     this.showModal = false;
+    this.resetModalForm();
   }
 
   protected save(): void {
+    if (!this.isAdmin()) {
+      this.closeModal();
+      return;
+    }
+
     this.formError = '';
     if (!this.formDate?.trim()) {
       this.formError = 'Date is required.';
@@ -164,7 +183,7 @@ export class TransactionComponent implements OnInit, OnDestroy {
   }
 
   protected delete(tx: Transaction): void {
-    if (!this.finance.isAdmin()) return;
+    if (!this.isAdmin()) return;
     if (!confirm(`Remove transaction "${tx.category}" on ${tx.date}?`)) return;
     this.finance.deleteTransaction(tx.id);
   }
@@ -205,5 +224,15 @@ export class TransactionComponent implements OnInit, OnDestroy {
     if (confirm('Replace all transactions with the built-in sample dataset?')) {
       this.finance.resetToMockData();
     }
+  }
+
+  private resetModalForm(): void {
+    this.editingId = null;
+    this.formDate = '';
+    this.formAmount = null;
+    this.formCategory = 'Food';
+    this.formType = 'expense';
+    this.formNote = '';
+    this.formError = '';
   }
 }
