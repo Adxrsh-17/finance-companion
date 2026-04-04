@@ -1,41 +1,90 @@
-import { Component, OnInit, inject, signal, computed, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, signal, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { InsightsService } from './services/insights.service';
+import {
+  BudgetDeviationResult,
+  CategoryBreakdown,
+  HealthScoreResult,
+  InsightStory,
+  InsightsService,
+  MonthlyComparisonData,
+  OpportunityCostResult,
+  QuickWin,
+  SmartAction,
+  SummaryStats,
+} from './services/insights.service';
 import { FinanceStateService } from './services/finance-state.service';
-import { DataService } from './services/data.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Chart, registerables } from 'chart.js';
+import { RoleService } from './services/role.service';
+import { Chart, registerables, TooltipItem } from 'chart.js';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-insights',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './insights.component.html',
   styleUrl: './insights.component.css'
 })
 export class InsightsComponent implements OnInit, AfterViewInit {
   private insights = inject(InsightsService);
   private finance = inject(FinanceStateService);
-  private dataService = inject(DataService);
+  private roleService = inject(RoleService);
 
   @ViewChild('monthlyTrendChart') monthlyChartRef!: ElementRef<HTMLCanvasElement>;
-  private monthlyChart?: Chart;
+  private monthlyChart?: Chart<'line'>;
+
+  // Expose Math for template usage
+  readonly Math = Math;
 
   // Signals for reactive UI
-  greeting = signal('');
-  stories = signal<any[]>([]);
-  breakdown = signal<any[]>([]);
-  quickWins = signal<any[]>([]);
-  stats = signal<any>({});
-  monthlyData = signal<any>({ labels: [], income: [], expenses: [] });
+  stories = signal<InsightStory[]>([]);
+  breakdown = signal<CategoryBreakdown[]>([]);
+  quickWins = signal<QuickWin[]>([]);
+  smartActions = signal<SmartAction[]>([]);
+  opportunityCost = signal<OpportunityCostResult>({
+    category: '',
+    monthlyAmount: 0,
+    futureValue: 0,
+    years: 10,
+    returnRate: 0.07,
+  });
+  budgetDeviation = signal<BudgetDeviationResult>({
+    needsPercent: 50,
+    needsTarget: 0,
+    needsActual: 0,
+    needsDeviation: 0,
+    wantsPercent: 30,
+    wantsTarget: 0,
+    wantsActual: 0,
+    wantsDeviation: 0,
+    savingsPercent: 20,
+    savingsTarget: 0,
+    savingsActual: 0,
+    savingsDeviation: 0,
+  });
+  stats = signal<SummaryStats>({
+    saved: 0,
+    savedDelta: 0,
+    savingsRate: 0,
+    biggestDay: null,
+    avgDaily: 0,
+  });
+  monthlyData = signal<MonthlyComparisonData>({ labels: [], income: [], expenses: [] });
+  healthScore = signal<HealthScoreResult>({ score: 50, tier: 'Fair' });
+  selectedDays = signal<number>(30);
+  showAdvancedSignals = signal<boolean>(false);
+  adminActionMessage = signal<string>('');
 
-  // Get current user for greeting
-  currentUser = toSignal(this.dataService.currentUser$, { initialValue: null });
+  readonly periods = [7, 30, 90];
 
-  constructor() {}
+  get greetingMessage(): string {
+    const name = this.roleService.isAdmin() ? 'Admin' : 'Adarsh';
+    return this.insights.getGreeting(name);
+  }
+
+  get isAdmin(): boolean {
+    return this.roleService.isAdmin();
+  }
 
   ngOnInit() {
     this.loadInsights();
@@ -46,22 +95,60 @@ export class InsightsComponent implements OnInit, AfterViewInit {
   }
 
   private loadInsights() {
-    const current = this.insights.getTransactionsForPeriod(30);
-    const previous = this.insights.getPreviousPeriodTransactions(30);
-    
-    const user = this.currentUser();
-    if (user) {
-      this.greeting.set(this.insights.getGreeting(user.name));
-    }
+    const days = this.selectedDays();
+    const current = this.insights.getTransactionsForPeriod(days);
+    const previous = this.insights.getPreviousPeriodTransactions(days);
+    const income = current.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0);
 
     this.stats.set(this.insights.getSummaryStats(current, previous));
     this.stories.set(this.insights.generateStories(current, previous));
     this.breakdown.set(this.insights.getCategoryBreakdown(current));
     this.quickWins.set(this.insights.getQuickWins(current, this.stats()));
+    this.healthScore.set(this.insights.getFinancialHealthScore(current));
+    
+    // NEW: Prescriptive analytics
+    this.smartActions.set(this.insights.generateSmartActions(current, this.healthScore().score));
+    this.opportunityCost.set(this.insights.calculateOpportunityCost(current));
+    this.budgetDeviation.set(this.insights.calculateBudgetDeviation(current, income));
+    
     this.monthlyData.set(this.insights.getMonthlyComparisonData());
     
-    // Update chart when data changes
     setTimeout(() => this.updateMonthlyChart(), 100);
+  }
+
+  setPeriod(days: number): void {
+    this.selectedDays.set(days);
+    this.loadInsights();
+  }
+
+  refreshInsights(): void {
+    this.loadInsights();
+    this.adminActionMessage.set(`Insights refreshed for last ${this.selectedDays()} days.`);
+  }
+
+  toggleAdvancedSignals(): void {
+    this.showAdvancedSignals.update((value) => !value);
+    this.adminActionMessage.set(this.showAdvancedSignals() ? 'Advanced signals enabled.' : 'Advanced signals hidden.');
+  }
+
+  exportInsightsSnapshot(): void {
+    const payload = {
+      generatedAt: new Date().toISOString(),
+      periodDays: this.selectedDays(),
+      stats: this.stats(),
+      healthScore: this.healthScore(),
+      topStories: this.stories().slice(0, 5),
+      breakdown: this.breakdown(),
+    };
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `insights-snapshot-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    this.adminActionMessage.set('Insights snapshot exported.');
   }
 
   private initMonthlyChart() {
@@ -106,6 +193,17 @@ export class InsightsComponent implements OnInit, AfterViewInit {
               usePointStyle: true,
               padding: 20
             }
+          },
+          tooltip: {
+            callbacks: {
+              label: (item: TooltipItem<'line'>) => {
+                const value = item.parsed.y ?? 0;
+                return new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(value);
+              },
+            },
           }
         },
         scales: {
@@ -125,8 +223,14 @@ export class InsightsComponent implements OnInit, AfterViewInit {
             },
             ticks: {
               color: this.finance.isDark() ? '#e2e8f0' : '#475569',
-              callback: function(value) {
-                return '$' + value.toLocaleString();
+              callback: (value: string | number) => {
+                const amount = typeof value === 'number' ? value : Number(value);
+                return new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(Number.isFinite(amount) ? amount : 0);
               }
             }
           }
@@ -149,36 +253,25 @@ export class InsightsComponent implements OnInit, AfterViewInit {
     return (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
   }
 
-  formatCurrency(val: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(val);
+  getStoryTypeClasses(type: InsightStory['type']): string {
+    return 'border-violet-300 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30';
   }
 
-  getStoryTypeClasses(type: string): string {
-    switch (type) {
-      case 'warning':
-        return 'border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20';
-      case 'positive':
-        return 'border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-900/20';
-      case 'info':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20';
-      default:
-        return 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800';
-    }
+  getStoryIconClasses(type: InsightStory['type']): string {
+    return 'text-violet-600 dark:text-violet-400';
   }
 
-  getStoryIconClasses(type: string): string {
-    switch (type) {
-      case 'warning':
-        return 'text-amber-600 dark:text-amber-400';
-      case 'positive':
-        return 'text-emerald-600 dark:text-emerald-400';
-      case 'info':
-        return 'text-blue-600 dark:text-blue-400';
-      default:
-        return 'text-slate-600 dark:text-slate-400';
+  getHealthTierClass(): string {
+    const tier = this.healthScore().tier;
+    if (tier === 'Excellent') {
+      return 'text-emerald-200 dark:text-emerald-100';
     }
+    if (tier === 'Good') {
+      return 'text-cyan-200 dark:text-cyan-100';
+    }
+    if (tier === 'Fair') {
+      return 'text-amber-200 dark:text-amber-100';
+    }
+    return 'text-rose-200 dark:text-rose-100';
   }
 }

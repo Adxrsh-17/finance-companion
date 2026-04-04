@@ -1,157 +1,241 @@
-<div class="max-w-6xl mx-auto space-y-8 pb-8">
-  <!-- Page hero with greeting -->
-  <header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-    <div>
-      <p class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400">
-        Intelligence
-      </p>
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
-        {{ greeting() || 'Good day'}}, here's your financial story
-      </h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-3 text-sm max-w-xl leading-relaxed">
-        Personalized insights based on your spending patterns and financial habits.
-      </p>
-    </div>
-  </header>
-
-  <!-- Summary Stats Cards -->
-  <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-600 dark:text-slate-400">Saved</p>
-          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-            {{ formatCurrency(stats().saved) }}
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {{ formatPct(stats().savedDelta) }} vs last period
-          </p>
-        </div>
-        <div class="h-12 w-12 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center">
-          <span class="text-emerald-600 dark:text-emerald-400 text-xl">📈</span>
-        </div>
+<div class="max-w-7xl mx-auto pb-8 space-y-6">
+  <section class="insights-card tw-animate-fade-up rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Behavioral Intelligence</p>
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">{{ greetingMessage }}</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Predictive analytics, behavioral personas, and your personal finance vitality score.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Period</span>
+        @for (days of periods; track days) {
+          <button
+            type="button"
+            (click)="setPeriod(days)"
+            class="rounded-full px-3 py-1.5 text-xs font-semibold border transition"
+            [class.bg-cyan-600]="selectedDays() === days"
+            [class.text-white]="selectedDays() === days"
+            [class.border-cyan-600]="selectedDays() === days"
+            [class.bg-white]="selectedDays() !== days"
+            [class.dark:bg-slate-700]="selectedDays() !== days"
+            [class.text-slate-700]="selectedDays() !== days"
+            [class.dark:text-slate-200]="selectedDays() !== days"
+            [class.border-slate-200]="selectedDays() !== days"
+            [class.dark:border-slate-600]="selectedDays() !== days"
+          >
+            {{ days }}D
+          </button>
+        }
       </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-600 dark:text-slate-400">Savings Rate</p>
-          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-            {{ stats().savingsRate }}%
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {{ stats().savingsRate >= 20 ? 'Above 20% benchmark' : 'Target: 20%' }}
-          </p>
+    @if (isAdmin) {
+      <div class="mt-4 rounded-2xl border border-cyan-200 dark:border-cyan-800 bg-cyan-50/70 dark:bg-cyan-950/30 p-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-300">Admin Controls</span>
+          <button type="button" (click)="refreshInsights()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">Refresh Signals</button>
+          <button type="button" (click)="exportInsightsSnapshot()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">Export Snapshot</button>
+          <button type="button" (click)="toggleAdvancedSignals()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">{{ showAdvancedSignals() ? 'Hide Advanced' : 'Show Advanced' }}</button>
         </div>
-        <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-          <span class="text-blue-600 dark:text-blue-400 text-xl">💎</span>
-        </div>
+        @if (adminActionMessage()) {
+          <p class="mt-2 text-xs text-cyan-700 dark:text-cyan-300">{{ adminActionMessage() }}</p>
+        }
       </div>
+    }
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Net Saved</p>
+      <p class="mt-2 text-4xl font-black text-slate-900 dark:text-white">{{ stats().saved | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ formatPct(stats().savedDelta) }} vs previous period</p>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-600 dark:text-slate-400">Avg Daily Spend</p>
-          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-            {{ formatCurrency(stats().avgDaily) }}
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Per day average
-          </p>
-        </div>
-        <div class="h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center">
-          <span class="text-amber-600 dark:text-amber-400 text-xl">📊</span>
-        </div>
-      </div>
+    <div class="insights-card insights-card--violet tw-animate-fade-up tw-delay-100 rounded-3xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-violet-500 to-indigo-500 dark:from-violet-600 dark:to-indigo-600 p-6 text-white shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <p class="text-xs uppercase tracking-wider text-violet-100 dark:text-violet-200">Savings Rate</p>
+      <p class="mt-2 text-4xl font-black">{{ stats().savingsRate }}%</p>
+      <p class="mt-2 text-sm text-violet-100 dark:text-violet-200">Target: 20% | Latest selected period.</p>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-600 dark:text-slate-400">Biggest Day</p>
-          <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1" *ngIf="stats().biggestDay">
-            {{ formatCurrency(stats().biggestDay[1]) }}
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" *ngIf="stats().biggestDay">
-            {{ stats().biggestDay[0] }}
-          </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" *ngIf="!stats().biggestDay">
-            No data
-          </p>
-        </div>
-        <div class="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-          <span class="text-purple-600 dark:text-purple-400 text-xl">🎯</span>
-        </div>
+    <div class="insights-card tw-animate-fade-up tw-delay-140 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20 flex items-center justify-center">
+      <div class="aspect-square w-44 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 text-white flex flex-col items-center justify-center shadow-xl shadow-cyan-500/25 dark:shadow-cyan-500/15">
+        <p class="text-[11px] uppercase tracking-[0.14em]">Health Score</p>
+        <p class="mt-1 text-5xl font-black">{{ healthScore().score }}</p>
+        <p class="mt-1 text-sm font-semibold">{{ healthScore().tier }}</p>
       </div>
     </div>
   </section>
 
-  <!-- Natural Language Stories -->
-  <section class="space-y-4">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Your Financial Story</h2>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div *ngFor="let story of stories()" 
-           class="rounded-xl border p-6 transition-all duration-200 hover:shadow-lg"
-           [class]="getStoryTypeClasses(story.type)">
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0">
-            <div class="h-10 w-10 rounded-full flex items-center justify-center text-lg"
-                 [style.background-color]="story.iconBg"
-                 [class]="getStoryIconClasses(story.type)">
-              {{ story.icon }}
+  @if (showAdvancedSignals()) {
+    <section class="insights-card tw-animate-fade-up rounded-3xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/30 p-5">
+      <h2 class="text-lg font-bold text-indigo-900 dark:text-indigo-200">Advanced Signal Snapshot</h2>
+      <p class="mt-1 text-sm text-indigo-800 dark:text-indigo-300">Biggest Day: {{ stats().biggestDay?.[1] !== undefined ? (stats().biggestDay?.[1] | currency : 'USD' : 'symbol' : '1.0-0') : 'No data' }}</p>
+      <p class="text-sm text-indigo-800 dark:text-indigo-300">Average Daily Spend: {{ stats().avgDaily | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
+    </section>
+  }
+
+  <!-- Future Wealth Section -->
+  @if (opportunityCost().monthlyAmount > 0) {
+    <section class="tw-animate-fade-up">
+      <div class="rounded-3xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800 dark:to-slate-900/50 p-8 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20 overflow-hidden relative">
+        <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-emerald-300/20 dark:from-emerald-500/10 to-cyan-300/20 dark:to-cyan-500/10 blur-3xl"></div>
+        <div class="relative z-10">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2">Future Wealth Projection</p>
+              <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Opportunity Cost Calculator</h3>
+              <p class="text-sm text-slate-700 dark:text-slate-300 mb-6 max-w-md">
+                You're spending <span class="font-semibold text-slate-900 dark:text-white">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}/month</span> on <span class="font-semibold">{{ opportunityCost().category }}</span>. 
+                If invested at <span class="font-semibold">{{ (opportunityCost().returnRate * 100) | number:'1.0-0' }}%</span> annual returns, this could grow to:
+              </p>
+              <div class="mt-4 p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                <p class="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">10-Year Projected Value</p>
+                <p class="text-5xl font-black bg-gradient-to-r from-emerald-500 via-cyan-500 to-green-500 dark:from-emerald-400 dark:via-cyan-400 dark:to-green-400 bg-clip-text text-transparent">
+                  {{ opportunityCost().futureValue | currency:'USD':'symbol':'1.0-0' }}
+                </p>
+                <p class="mt-2 text-xs text-slate-600 dark:text-slate-400">That's <span class="font-semibold">{{ (opportunityCost().futureValue - (opportunityCost().monthlyAmount * 120)) | currency:'USD':'symbol':'1.0-0' }}</span> in pure compound growth</p>
+              </div>
+            </div>
+            <div class="flex-shrink-0 w-full lg:w-auto">
+              <div class="aspect-square w-full lg:w-64 rounded-2xl bg-gradient-to-br from-emerald-400 via-cyan-400 to-green-500 dark:from-emerald-500 dark:via-cyan-500 dark:to-green-600 flex items-center justify-center shadow-xl shadow-cyan-500/30 dark:shadow-cyan-500/15 relative group">
+                <div class="text-center">
+                  <p class="text-sm font-semibold text-white/80 uppercase tracking-wider">Invested Monthly</p>
+                  <p class="mt-2 text-4xl font-black text-white">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}</p>
+                  <div class="mt-4 h-1 w-24 mx-auto rounded-full bg-white/40"></div>
+                  <p class="mt-4 text-xs font-semibold text-white/90 uppercase">Becomes</p>
+                  <p class="mt-1 text-2xl font-black text-white">{{ opportunityCost().futureValue | currency:'USD':'symbol':'1.0-0' }}</p>
+                </div>
+                <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/10 to-transparent"></div>
+              </div>
             </div>
           </div>
-          <div class="flex-1">
-            <h3 class="font-semibold text-slate-900 dark:text-white mb-2">
-              {{ story.title }}
-            </h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              {{ story.body }}
+        </div>
+      </div>
+    </section>
+  }
+
+  <section class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <article class="insights-card tw-animate-fade-up xl:col-span-2 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Financial Signal Feed</h2>
+      <div class="space-y-3">
+        @for (story of stories(); track story.title + story.icon) {
+          <div class="insights-story-card rounded-2xl border p-4" [class]="getStoryTypeClasses(story.type)">
+            <div class="flex items-start gap-3">
+              <div class="h-10 w-10 rounded-full flex items-center justify-center text-lg" [style.background-color]="story.iconBg">{{ story.icon }}</div>
+              <div>
+                <h3 class="font-semibold text-slate-900 dark:text-white">{{ story.title }}</h3>
+                <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{{ story.body }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Prescriptive Actions</h2>
+      <div class="space-y-3">
+        @if (smartActions().length > 0) {
+          @for (action of smartActions(); track action.title) {
+            <div class="rounded-2xl border border-violet-300 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 p-4 transition">
+              <div class="flex items-start gap-3">
+                <div class="text-2xl">{{ action.icon }}</div>
+                <div class="flex-1">
+                  <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ action.title }}</p>
+                  <p class="mt-1 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{{ action.body }}</p>
+                  @if (action.impact) {
+                    <p class="mt-2 text-xs font-semibold px-2 py-1 rounded inline-block bg-violet-200 dark:bg-violet-800 text-violet-800 dark:text-violet-200">
+                      💡 {{ action.impact }}
+                    </p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4 text-center">
+            <p class="text-sm text-slate-600 dark:text-slate-400">No actions needed. You're on track!</p>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <article class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">50/30/20 Budget</h2>
+      <div class="space-y-4">
+        <!-- Needs -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Needs (50% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().needsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+              {{ budgetDeviation().needsPercent }}%
             </p>
           </div>
+          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+          <div class="h-2 rounded-full bg-violet-500 dark:bg-violet-600 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().needsPercent)"></div>
+          </div>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().needsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
+        </div>
+
+        <!-- Wants -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Wants (30% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().wantsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+              {{ budgetDeviation().wantsPercent }}%
+            </p>
+          </div>
+          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+          <div class="h-2 rounded-full bg-violet-400 dark:bg-violet-500 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().wantsPercent)"></div>
+          </div>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().wantsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
+        </div>
+
+        <!-- Savings -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Savings (20% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().savingsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+              {{ budgetDeviation().savingsPercent }}%
+            </p>
+          </div>
+          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+          <div class="h-2 rounded-full bg-violet-600 dark:bg-violet-700 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().savingsPercent)"></div>
+          </div>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().savingsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
         </div>
       </div>
-    </div>
+    </article>
   </section>
 
-  <!-- Category Breakdown -->
-  <section class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Spending by Category</h2>
-    <div class="space-y-4">
-      <div *ngFor="let cat of breakdown()" class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="h-3 w-3 rounded-full" [style.background-color]="cat.color"></div>
-          <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ cat.name }}</span>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class="text-sm text-slate-600 dark:text-slate-400">{{ cat.percent }}%</span>
-          <span class="text-sm font-mono font-semibold text-slate-900 dark:text-white">
-            {{ formatCurrency(cat.amount) }}
-          </span>
-        </div>
+  <section class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <article class="insights-card tw-animate-fade-up rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Spending by Category</h2>
+      <div class="space-y-3">
+        @for (cat of breakdown(); track cat.name) {
+          <div class="flex items-center gap-3">
+            <div class="h-2.5 w-2.5 rounded-full" [style.background-color]="cat.color"></div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-slate-700 dark:text-slate-300">{{ cat.name }}</span>
+                <span class="font-semibold text-slate-900 dark:text-white">{{ cat.amount | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
+              </div>
+              <div class="mt-1 h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                <div class="h-full rounded-full" [style.width.%]="cat.percent" [style.background-color]="cat.color"></div>
+              </div>
+            </div>
+          </div>
+        }
       </div>
-    </div>
-  </section>
+    </article>
 
-  <!-- Quick Wins -->
-  <section class="space-y-4" *ngIf="quickWins().length > 0">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Quick Wins</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div *ngFor="let win of quickWins()" 
-           class="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl p-4 border border-cyan-200 dark:border-cyan-800">
-        <h3 class="font-semibold text-slate-900 dark:text-white mb-2">{{ win.head }}</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300">{{ win.body }}</p>
+    <article class="insights-card tw-animate-fade-up tw-delay-100 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">6-Month Income vs Expense Curve</h2>
+      <div class="h-72">
+        <canvas #monthlyTrendChart></canvas>
       </div>
-    </div>
-  </section>
-
-  <!-- Monthly Trend Chart -->
-  <section class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">6-Month Trend</h2>
-    <div class="h-64">
-      <canvas #monthlyTrendChart></canvas>
-    </div>
+    </article>
   </section>
 </div>

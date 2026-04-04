@@ -12,3 +12,417 @@
 .animate-in {
   animation: animate-in 0.45s ease-out both;
 }
+
+/* Dashboard Stat Cards - Refined Glassmorphism Style */
+.stat-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+/* Animated gradient border for stat cards */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(6,182,212,0.4), rgba(124,58,237,0.4), rgba(6,182,212,0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderRotate 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Dark mode stat cards */
+:root.dark .stat-card {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark .stat-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+/* Light mode stat cards */
+:root.light .stat-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+}
+
+:root.light .stat-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   COMMAND BAR - PREMIUM ORIGINAL DESIGN
+   ======================================== */
+
+.command-bar {
+  /* Base Structure */
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px;
+  
+  /* Premium Shadow System */
+  box-shadow: 
+    0 15px 50px -12px rgba(0, 0, 0, 0.15), 
+    0 0 0 1px rgba(139, 92, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Spacing & Layout */
+  padding: 20px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+  
+  /* Transitions */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.command-bar:hover {
+  box-shadow: 
+    0 20px 60px -15px rgba(0, 0, 0, 0.2), 
+    0 0 0 1px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Animated Gradient Border */
+.command-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(6,182,212,0.4), 
+    rgba(124,58,237,0.4), 
+    rgba(236,72,153,0.3), 
+    rgba(6,182,212,0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderRotate 6s linear infinite;
+  pointer-events: none;
+}
+
+/* ========================================
+   COMMAND SECTIONS
+   ======================================== */
+
+.cmd-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.cmd-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.cmd-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 4px 0;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.05));
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  display: inline-block;
+}
+
+.cmd-value:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(6, 182, 212, 0.12));
+  border-color: rgba(139, 92, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   TIME PERIOD PILLS
+   ======================================== */
+
+.cmd-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.cmd-pill {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Base Styling */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  
+  /* Effects */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Shimmer Effect */
+.cmd-pill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.6s;
+}
+
+.cmd-pill:hover::before {
+  left: 100%;
+}
+
+.cmd-pill:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: var(--text-primary);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 8px 25px -8px rgba(139, 92, 246, 0.3);
+}
+
+.cmd-pill.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(6, 182, 212, 0.15));
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 8px 25px -8px rgba(139, 92, 246, 0.4),
+              0 0 0 1px rgba(139, 92, 246, 0.2);
+}
+
+/* ========================================
+   DIVIDER
+   ======================================== */
+
+.cmd-divider {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  border-radius: 1px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ========================================
+   THEME VARIATIONS
+   ======================================== */
+
+/* Dark mode command bar */
+:root.dark .command-bar {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 15px 50px -12px rgba(0, 0, 0, 0.4), 
+              0 0 0 1px rgba(139, 92, 246, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+:root.dark .command-bar:hover {
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.5), 
+              0 0 0 1px rgba(139, 92, 246, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .cmd-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:root.dark .cmd-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+:root.dark .cmd-pill.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.2));
+  border-color: rgba(139, 92, 246, 0.6);
+}
+
+/* Light mode command bar */
+:root.light .command-bar {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 15px 50px -12px rgba(0, 0, 0, 0.05), 
+              0 0 0 1px rgba(139, 92, 246, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+:root.light .command-bar:hover {
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.08), 
+              0 0 0 1px rgba(139, 92, 246, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+:root.light .cmd-pill {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #6b7280;
+}
+
+:root.light .cmd-pill:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #1f2937;
+}
+
+:root.light .cmd-pill.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.15));
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #ffffff;
+}
+
+:root.light .cmd-value {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(6, 182, 212, 0.04));
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  color: #1f2937;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet Landscape */
+@media (max-width: 1024px) {
+  .command-bar {
+    padding: 20px 24px;
+    gap: 32px;
+  }
+  
+  .cmd-pills {
+    gap: 10px;
+  }
+  
+  .cmd-pill {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Tablet Portrait */
+@media (max-width: 768px) {
+  .command-bar {
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px;
+    border-radius: 20px;
+    justify-content: flex-start;
+  }
+
+  .cmd-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, 
+      transparent 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 100%);
+  }
+
+  .cmd-pills {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .cmd-pill {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  
+  .cmd-value {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .command-bar {
+    padding: 16px;
+    margin-bottom: 24px;
+    gap: 20px;
+    border-radius: 16px;
+  }
+
+  .cmd-pills {
+    gap: 6px;
+  }
+
+  .cmd-pill {
+    padding: 6px 10px;
+    font-size: 10px;
+    border-radius: 12px;
+  }
+
+  .cmd-value {
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+  
+  .cmd-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes borderRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

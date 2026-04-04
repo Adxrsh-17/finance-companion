@@ -42,17 +42,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   isAdmin = toSignal(this.roleService.isAdmin$, { initialValue: false });
   isViewer = toSignal(this.roleService.isViewer$, { initialValue: true });
 
-  // Time period data for command bar
+  // Time period data for command bar - reduced to 4 options
   timePeriods: TimePeriod[] = [
-    { label: 'Today', value: 'today' },
-    { label: '3 Days', value: '3days' },
-    { label: 'Week', value: 'week' },
-    { label: '2 Weeks', value: '2weeks' },
     { label: 'Month', value: 'month' },
     { label: '3 Months', value: '3months' },
     { label: '6 Months', value: '6months' },
     { label: 'Year', value: 'year' },
-    { label: 'All Time', value: 'alltime' },
   ];
   selectedPeriod = signal('month');
 
