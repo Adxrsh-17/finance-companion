@@ -1,39 +1,39 @@
-# Finance Companion (Zorvyn)
+# Finance Companion 
 
-A modern, role-based personal finance dashboard built with **Angular (standalone components)**, **TypeScript**, **Tailwind CSS**, and charting for quick insights into income/expenses, trends, and transaction history.
+A modern, role-based personal finance dashboard UI built with **Angular (standalone components)**, **TypeScript**, **Tailwind CSS**, and charts to visualize income, expenses, trends, and transactions.
 
-> This project is a frontend UI with mock/sample data and a simulated auth flow (no real backend required).
+> Note: This is primarily a frontend/demo app with mock data and a simulated login flow (no backend required).
 
-## Demo Credentials
+---
 
-Use the built-in mock accounts on the login screen:
-
-- **Admin**: `admin@zorvyn.com` / `admin123`
-- **Viewer**: `viewer@zorvyn.com` / `viewer123`
 
 ## Features
 
-- **Dashboard**
-  - Summary cards (income, expense, balance, etc.)
-  - Trend charts and category breakdown
-  - Time-period filtering (Week / Month / Year)
-- **Transactions**
-  - Admin: create / edit / delete transactions
-  - Viewer: read-only access
-  - Export to **CSV** and **JSON**
-- **Insights**
-  - Insights view for additional analytics
-  - Optional API hook via environment config
-- **Role-based access control (RBAC)**
-  - Protected routes with role checks
-  - Clear UI indicators for role
-- **Theme system**
-  - Dark / light mode using CSS variables
-  - Smooth transitions
-- **Premium UI**
-  - Glassmorphism styling
-  - Particle canvas background
-  - Responsive layout
+### Dashboard
+- Summary cards (income, expense, balance, transaction count)
+- Trend charts + category breakdown
+- Unified period filter: **Week / Month / Year**
+
+### Transactions
+- **Admin**: create / edit / delete transactions
+- **Viewer**: read-only mode
+- Export transactions to **CSV** and **JSON**
+
+### Insights
+- Insights/analytics view
+- Optional API integration via environment configuration
+
+### Role-Based Access Control (RBAC)
+- Guarded routes + role checks
+- Clear visual indicators for role state
+
+### UI / UX
+- Glassmorphism-inspired UI
+- Particle canvas background
+- Responsive (desktop + mobile)
+- Dark/Light mode using CSS variables
+
+---
 
 ## Tech Stack
 
@@ -43,74 +43,81 @@ Use the built-in mock accounts on the login screen:
 - **Chart.js**
 - **RxJS**
 
+---
+
 ## Routes
 
-The app uses Angular router with an auth guard:
+The app uses an auth guard with role metadata:
 
 - `/login`
 - `/dashboard` (guarded: admin, viewer)
 - `/transactions` (guarded: admin, viewer)
 - `/insights` (guarded: admin, viewer)
 
+---
+
 ## Getting Started
 
 ### Prerequisites
-
-- **Node.js** (LTS recommended)
-- **npm** (repo uses npm; see `package.json`)
+- Node.js (LTS recommended)
+- npm
 
 ### Install
-
 ```bash
 npm install
 ```
 
-### Run (dev)
-
+### Run (development)
 ```bash
 npm start
 ```
 
-Then open the URL shown in your terminal (typically `http://localhost:4200`).
+Open the URL printed in the terminal 
 
 ### Build
-
 ```bash
 npm run build
 ```
 
 ### Tests
-
 ```bash
 npm test
 ```
+
+---
 
 ## Configuration
 
 ### Insights API (optional)
 
-You can configure an optional backend endpoint to receive insight payloads:
+You can configure a backend endpoint for insights payloads:
 
 - File: `src/environments/environment.ts`
 - Key: `insightsApiUrl`
 
-If left empty, the app uses bundled public mock JSON for demos.
+If left empty, the app uses bundled mock data for demos.
 
-## Project Structure (high level)
+---
 
-- `src/app/` — main app code
+## Project Structure (High Level)
+
+- `src/app/`
   - `dashboard.component.*`
   - `transaction.component.*`
   - `insights.component.*`
   - `login/`
-  - `services/` (mock data + RBAC + helpers)
-- `public/` — static assets
+  - `services/` (mock data, RBAC, helpers)
+- `public/` (static assets)
+
+---
 
 ## Notes
 
-- Auth & roles are **simulated on the frontend** for demo purposes.
-- Transaction data is generated locally (sample data).
+- Authentication and roles are **frontend-simulated** for demonstration.
+- Transaction data is **generated locally** (sample data).
+
+---
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT — see `LICENSE`.
