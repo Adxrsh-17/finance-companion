@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { inject } from '@angular/core';
@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { CurrencyService } from '../services/currency.service';
 import { FinanceStateService } from '../services/finance-state.service';
 import { interval, Subscription } from 'rxjs';
+import { RoleService } from '../services/role.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-layout',
@@ -16,6 +18,11 @@ import { interval, Subscription } from 'rxjs';
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
   template: `
     <div class="app-layout">
+      <div *ngIf="isLandingPage(); else shellLayout" class="auth-route">
+        <router-outlet></router-outlet>
+      </div>
+
+      <ng-template #shellLayout>
       <!-- Animated Background -->
       <div class="animated-background">
         <!-- Particle Canvas -->
@@ -91,7 +98,7 @@ import { interval, Subscription } from 'rxjs';
               </div>
               <div class="user-info">
                 <div class="user-name">Adarsh Pradeep</div>
-                <div class="user-role">Financial Analyst</div>
+                <div class="user-role">{{ currentRoleLabel() }}</div>
               </div>
               <button class="sign-out-btn" (click)="logout()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -173,6 +180,7 @@ import { interval, Subscription } from 'rxjs';
           <router-outlet></router-outlet>
         </div>
       </main>
+      </ng-template>
     </div>
   `,
   styles: [`
@@ -212,6 +220,12 @@ import { interval, Subscription } from 'rxjs';
       overflow: hidden;
       background: var(--bg-app);
       position: relative;
+    }
+
+    .auth-route {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* Animated Background */
@@ -1346,8 +1360,12 @@ import { interval, Subscription } from 'rxjs';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   private router = inject(Router);
+  private roleService = inject(RoleService);
+  private dataService = inject(DataService);
   public currencyService = inject(CurrencyService);
   public finance = inject(FinanceStateService);
+  currentRole = toSignal(this.roleService.role$, { initialValue: 'viewer' });
+  currentRoleLabel = computed(() => (this.currentRole() === 'admin' ? 'Admin' : 'Viewer'));
   
   isLandingPage = toSignal(
     this.router.events.pipe(
@@ -1509,18 +1527,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    // Clear authentication state
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userEmail');
-    
-    // Clear user state in data service
-    const dataService = this.finance as any;
-    if (dataService.clearCurrentUser) {
-      dataService.clearCurrentUser();
-    }
-    
-    // Navigate to login page
-    this.router.navigate(['/login']);
+    this.dataService.clearCurrentUser();
+    this.finance.setRole('viewer');
+    this.roleService.logout();
   }
 }
