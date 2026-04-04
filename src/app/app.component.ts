@@ -75,10 +75,8 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Initialize particle animations after view is ready
+    // Initialize components after view is ready
     setTimeout(() => {
-      this.initBgParticles();
-      this.initSidebarParticles();
     }, 100);
   }
 
@@ -120,118 +118,6 @@ export class AppComponent implements AfterViewInit {
     this.toastService.success(`Switched to ${newTheme} mode`);
   }
 
-  // Initialize full-page particle animation
-  private initBgParticles() {
-    const canvas = document.getElementById('bgParticles') as HTMLCanvasElement;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d')!;
-    
-    const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.45,
-      vy: (Math.random() - 0.5) * 0.45,
-      r: Math.random() * 1.8 + 0.6
-    }));
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Check theme for colors
-      const isLight = document.documentElement.classList.contains('light');
-      const dotColor = isLight ? 'rgba(6,182,212,0.22)' : 'rgba(6,182,212,0.55)';
-      const lineColor = (alpha: number) => 
-        isLight ? `rgba(6,182,212,${alpha * 0.4})` : `rgba(6,182,212,${alpha})`;
-      
-      // Draw connecting lines
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 140) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = lineColor((1 - dist/140) * 0.25);
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw dots
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = dotColor;
-        ctx.fill();
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      });
-
-      requestAnimationFrame(draw);
-    };
-    draw();
-  }
-
-  // Initialize particle animation for sidebar
-  private initSidebarParticles() {
-    const canvas = document.getElementById('sidebarParticleCanvas') as HTMLCanvasElement;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d')!;
-    const parent = canvas.parentElement!;
-    canvas.width  = parent.offsetWidth;
-    canvas.height = parent.offsetHeight;
-
-    const particles = Array.from({ length: 18 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      r: Math.random() * 1.5 + 0.5
-    }));
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 60) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(6,182,212,${(1 - dist/60) * 0.4})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(6,182,212,0.5)';
-        ctx.fill();
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      });
-      requestAnimationFrame(animate);
-    };
-    animate();
-  }
 
   // Header state
   sectionTitle = computed(() => {

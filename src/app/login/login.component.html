@@ -1,59 +1,153 @@
-<section class="login-page">
-  <div class="gradient-layer"></div>
-  <div class="network-layer" aria-hidden="true"></div>
-  <div class="particle-layer" aria-hidden="true">
-    <span class="particle" *ngFor="let particle of particles"></span>
-  </div>
+<section class="lp-root">
 
-  <div class="login-card-modern relative z-10 w-full max-w-md rounded-2xl p-8 shadow-2xl backdrop-blur-xl">
-    <div class="mb-6 space-y-2 text-center">
-      <p class="login-eyebrow text-xs font-semibold uppercase tracking-[0.22em]">ZORVYN FINANCE</p>
-      <h1 class="login-title text-3xl font-bold">Sign In</h1>
-      <p class="login-subtitle text-sm">Use one of the demo credentials to continue.</p>
-    </div>
+  <!-- ── Left Panel: Branding ── -->
+  <div class="lp-left" aria-hidden="true">
+    <!-- Orbs -->
+    <div class="lp-orb lp-orb-1"></div>
+    <div class="lp-orb lp-orb-2"></div>
+    <div class="lp-orb lp-orb-3"></div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="space-y-4">
-      <label class="login-label block text-sm font-medium">
-        Email
-        <input
-          type="email"
-          formControlName="email"
-          placeholder="name@company.com"
-          autocomplete="email"
-          class="login-input mt-1 w-full rounded-xl px-3 py-2.5 outline-none transition"
-        />
-      </label>
+    <!-- Grid pattern -->
+    <div class="lp-grid"></div>
 
-      <label class="login-label block text-sm font-medium">
-        Password
-        <input
-          type="password"
-          formControlName="password"
-          placeholder="Enter password"
-          autocomplete="current-password"
-          class="login-input mt-1 w-full rounded-xl px-3 py-2.5 outline-none transition"
-        />
-      </label>
+    <!-- Content -->
+    <div class="lp-brand">
+      <div class="lp-logo">
+        <span class="lp-logo-z">Z</span>
+      </div>
+      <div class="lp-brand-name">Zorvyn</div>
+      <div class="lp-brand-tag">Finance Intelligence Platform</div>
 
-      @if (loginError) {
-        <div class="login-error-banner rounded-xl px-3 py-2 text-sm font-medium">
-          {{ loginError }}
+      <div class="lp-feature-list">
+        <div class="lp-feature">
+          <span class="lp-feature-icon">📊</span>
+          <div>
+            <div class="lp-feature-title">Real-Time Analytics</div>
+            <div class="lp-feature-desc">Live behavioral signals and spending intelligence</div>
+          </div>
         </div>
-      }
+        <div class="lp-feature">
+          <span class="lp-feature-icon">🛡️</span>
+          <div>
+            <div class="lp-feature-title">Admin Control Center</div>
+            <div class="lp-feature-desc">Full signal authority and data pipeline management</div>
+          </div>
+        </div>
+        <div class="lp-feature">
+          <span class="lp-feature-icon">🔮</span>
+          <div>
+            <div class="lp-feature-title">Predictive Insights</div>
+            <div class="lp-feature-desc">Future wealth projection and opportunity cost analysis</div>
+          </div>
+        </div>
+      </div>
 
-      <button
-        type="submit"
-        [disabled]="isLoading"
-        class="login-submit-btn w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {{ isLoading ? 'Signing in...' : 'Sign In' }}
-      </button>
-    </form>
-
-    <div class="login-demo-box mt-6 rounded-xl p-4 text-xs">
-      <p class="login-demo-title font-semibold">Demo credentials</p>
-      <p class="mt-1">Admin: admin@zorvyn.com / admin123</p>
-      <p>Viewer: viewer@zorvyn.com / viewer123</p>
+      <div class="lp-testimonial">
+        <div class="lp-quote">"Zorvyn transformed how we understand financial behaviour."</div>
+        <div class="lp-quote-author">— Zorvyn Finance Team</div>
+      </div>
     </div>
   </div>
+
+  <!-- ── Right Panel: Login Form ── -->
+  <div class="lp-right">
+    <!-- Particles -->
+    <div class="lp-particles" aria-hidden="true">
+      <span class="lp-particle" *ngFor="let p of particles"></span>
+    </div>
+
+    <div class="lp-card">
+      <!-- Card top glow -->
+      <div class="lp-card-glow"></div>
+
+      <!-- Header -->
+      <div class="lp-card-header">
+        <div class="lp-card-eyebrow">
+          <span class="lp-pulse-dot"></span>
+          Secure Access
+        </div>
+        <h1 class="lp-card-title">Welcome back</h1>
+        <p class="lp-card-sub">Sign in to access your financial dashboard</p>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="lp-form">
+
+        <div class="lp-field">
+          <label class="lp-label" for="lp-email">Email address</label>
+          <div class="lp-input-wrap">
+            <span class="lp-input-icon">✉️</span>
+            <input
+              id="lp-email"
+              type="email"
+              formControlName="email"
+              placeholder="name@company.com"
+              autocomplete="email"
+              class="lp-input"
+            />
+          </div>
+        </div>
+
+        <div class="lp-field">
+          <label class="lp-label" for="lp-password">Password</label>
+          <div class="lp-input-wrap">
+            <span class="lp-input-icon">🔑</span>
+            <input
+              id="lp-password"
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              class="lp-input"
+            />
+          </div>
+        </div>
+
+        @if (loginError) {
+          <div class="lp-error">
+            <span>⚠️</span>
+            {{ loginError }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="lp-submit"
+        >
+          @if (isLoading) {
+            <span class="lp-spinner"></span>
+            Signing in...
+          } @else {
+            Sign In →
+          }
+        </button>
+
+      </form>
+
+      <!-- Demo credentials -->
+      <div class="lp-demo">
+        <div class="lp-demo-header">
+          <span class="lp-demo-icon">🎭</span>
+          Demo Credentials
+        </div>
+        <div class="lp-demo-grid">
+          <div class="lp-demo-item">
+            <div class="lp-demo-role">
+              <span class="lp-demo-badge admin">Admin</span>
+            </div>
+            <div class="lp-demo-creds">admin@zorvyn.com · admin123</div>
+          </div>
+          <div class="lp-demo-item">
+            <div class="lp-demo-role">
+              <span class="lp-demo-badge viewer">Viewer</span>
+            </div>
+            <div class="lp-demo-creds">viewer@zorvyn.com · viewer123</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </section>

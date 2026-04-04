@@ -12,7 +12,7 @@ import { ToastService, Toast } from '../services/toast.service';
            [class]="'toast-' + toast.type"
            class="max-w-sm p-4 rounded-lg shadow-lg border transform transition-all duration-300 ease-in-out"
            [ngClass]="{
-             'bg-green-50 border-green-200 text-green-800': toast.type === 'success',
+             'bg-violet-50 border-violet-200 text-violet-800': toast.type === 'success',
              'bg-red-50 border-red-200 text-red-800': toast.type === 'error',
              'bg-yellow-50 border-yellow-200 text-yellow-800': toast.type === 'warning',
              'bg-blue-50 border-blue-200 text-blue-800': toast.type === 'info'

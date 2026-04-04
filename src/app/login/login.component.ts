@@ -20,7 +20,7 @@ export class LoginComponent {
 
   isLoading = false;
   loginError = '';
-  readonly particles = Array.from({ length: 18 }, (_, index) => index + 1);
+  readonly particles = Array.from({ length: 35 }, (_, index) => index + 1);
 
   readonly loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],

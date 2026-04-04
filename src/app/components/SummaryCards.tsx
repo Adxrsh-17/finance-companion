@@ -10,7 +10,7 @@ const SummaryCards: React.FC = () => {
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl shadow-premium border border-slate-200 dark:border-slate-700 p-6">
             <div className="skeleton-premium h-4 w-24 rounded-lg mb-3"></div>
-            <div className="skeleton-premium h-8 w-32 rounded-xl"></div>
+            <div className="font-medium text-violet-600">+{Math.abs(Math.random() * 20).toFixed(1)}%</div>
           </div>
         ))}
       </div>
@@ -24,7 +24,7 @@ const SummaryCards: React.FC = () => {
       trend: totals.balance >= 0 ? 'positive' : 'negative',
       icon: '💰',
       color: 'violet',
-      bgColor: 'from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20',
+      bgColor: 'from-violet-50 to-violet-50 dark:from-violet-950/30 dark:to-violet-950/20',
       borderColor: 'border-violet-200 dark:border-violet-800',
       textColor: 'text-violet-700 dark:text-violet-300'
     },
@@ -33,10 +33,10 @@ const SummaryCards: React.FC = () => {
       value: totals.income,
       trend: 'positive',
       icon: '📈',
-      color: 'emerald',
-      bgColor: 'from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/20',
-      borderColor: 'border-emerald-200 dark:border-emerald-800',
-      textColor: 'text-emerald-700 dark:text-emerald-300'
+      color: 'violet',
+      bgColor: 'from-violet-50 to-violet-50 dark:from-violet-950/30 dark:to-violet-950/20',
+      borderColor: 'border-violet-200 dark:border-violet-800',
+      textColor: 'text-violet-700 dark:text-violet-300'
     },
     {
       title: 'Total Expenses',
@@ -85,7 +85,7 @@ const SummaryCards: React.FC = () => {
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case 'positive':
-        return 'text-emerald-500';
+        return 'text-violet-500';
       case 'negative':
         return 'text-red-500';
       default:
