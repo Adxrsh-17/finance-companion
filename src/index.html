@@ -6,40 +6,45 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
     <style>
       /* Force violet background and no scrolling */
-      html, body {
+      html,
+      body {
         margin: 0 !important;
         padding: 0 !important;
         height: 100vh !important;
         overflow: hidden !important;
         background: linear-gradient(135deg, #2a0f4a 0%, #4a148c 50%, #3a0f6a 100%) !important;
       }
-      
+
       /* Hide all scrollbars */
       ::-webkit-scrollbar {
         width: 0px !important;
         height: 0px !important;
         display: none !important;
       }
-      
+
       * {
         scrollbar-width: none !important;
         -ms-overflow-style: none !important;
       }
-      
+
       /* Override any component backgrounds */
-      app-root, .login-container {
+      app-root,
+      .login-container {
         background: linear-gradient(135deg, #2a0f4a 0%, #4a148c 50%, #3a0f6a 100%) !important;
       }
     </style>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest" />
   </head>
   <body>
     <app-root></app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
   </body>
 </html>

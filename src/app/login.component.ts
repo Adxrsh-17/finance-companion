@@ -9,127 +9,289 @@ interface LoginCredentials {
   password: string;
 }
 
+interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="login-container">
-      <!-- LEFT COLUMN - Hero Panel -->
-      <div class="hero-panel">
-        <!-- Dot Grid Background -->
-        <div class="dot-grid"></div>
-        
-        <!-- Content -->
-        <div class="hero-content">
-          <!-- Logo -->
-          <div class="hero-logo">
-            <div class="logo-mark">Z</div>
-          </div>
-          
-          <!-- Headlines -->
-          <h1 class="hero-title">Your Financial Companion</h1>
-          <p class="hero-subtitle">Track expenses, monitor investments, and achieve your financial goals with intelligent insights.</p>
-          
-          <!-- Stats Pills -->
-          <div class="stats-pills">
-            <div class="pill">
-              <div class="pill-number">10k+</div>
-              <div class="pill-label">Users</div>
-            </div>
-            <div class="pill">
-              <div class="pill-number">Bank-grade</div>
-              <div class="pill-label">Security</div>
-            </div>
-            <div class="pill">
-              <div class="pill-number">Real-time</div>
-              <div class="pill-label">Sync</div>
-            </div>
-          </div>
-        </div>
+    <div class="auth-container">
+      <!-- Background Elements -->
+      <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
       </div>
       
-      <!-- RIGHT COLUMN - Login Form Panel -->
-      <div class="form-panel">
-        <div class="form-container">
-          <!-- Logo Icon -->
-          <div class="form-logo">
-            <div class="logo-icon">Z</div>
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+      </div>
+
+      <!-- Main Auth Card -->
+      <div class="auth-card">
+        <div class="glass-bg"></div>
+        <div class="auth-content">
+          <!-- Logo Section -->
+          <div class="logo-section">
+            <div class="logo-container">
+              <div class="logo-ring"></div>
+              <div class="logo-core">
+                <span class="logo-text">Z</span>
+              </div>
+              <div class="logo-glow"></div>
+            </div>
+            <h1 class="brand-title">Zorvyn Finance</h1>
+            <p class="brand-subtitle">Your intelligent financial companion</p>
           </div>
-          
-          <!-- Brand Label -->
-          <div class="brand-label">ZORVYN FINANCE</div>
-          
-          <!-- Welcome Heading -->
-          <h2 class="form-title">Welcome back</h2>
-          
-          <!-- Login Form -->
-          <form class="login-form" (ngSubmit)="onLoginSubmit($event)">
-            <div class="form-group">
-              <label for="email" class="form-label">Email Address</label>
-              <div class="input-wrapper">
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email" 
-                  class="form-input"
-                  placeholder="Enter your email address"
-                  required
-                  [(ngModel)]="credentials.email"
-                />
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="password" class="form-label">Password</label>
-              <div class="input-wrapper">
-                <input 
-                  type="password" 
-                  id="password" 
-                  name="password" 
-                  class="form-input"
-                  placeholder="Enter your password"
-                  required
-                  [(ngModel)]="credentials.password"
-                />
-              </div>
-              <div class="forgot-password">
-                <a href="#" class="forgot-link">Forgot password?</a>
-              </div>
-            </div>
-            
-            <button type="submit" class="login-button" [disabled]="isLoading">
-              <span class="button-text" *ngIf="!isLoading">Sign In</span>
-              <span class="button-text" *ngIf="isLoading">Signing in...</span>
-              <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-              <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading" style="animation: spin 1s linear infinite;">
-                <path d="M21 12a9 9 0 11-6.219-8.56"/>
-              </svg>
+
+          <!-- Tab Navigation -->
+          <div class="tab-nav">
+            <button 
+              class="tab-btn" 
+              [class.active]="activeTab === 'signin'"
+              (click)="switchTab('signin')"
+            >
+              Sign In
             </button>
-          </form>
-          
-          <!-- Divider -->
-          <div class="divider">
-            <span class="divider-text">Or continue as</span>
+            <button 
+              class="tab-btn" 
+              [class.active]="activeTab === 'register'"
+              (click)="switchTab('register')"
+            >
+              Register
+            </button>
           </div>
-          
-          <!-- Quick Access Buttons -->
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <!-- Sign In Form -->
+            <div class="tab-pane" [class.active]="activeTab === 'signin'">
+              <div class="welcome-section">
+                <h2 class="welcome-title">Welcome back</h2>
+                <p class="welcome-subtitle">Enter your credentials to access your account</p>
+              </div>
+
+              <form class="auth-form" (ngSubmit)="onSignInSubmit($event)">
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <input 
+                      type="email" 
+                      class="form-input"
+                      placeholder="Email address"
+                      required
+                      [(ngModel)]="signInForm.email"
+                      name="email"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                    <input 
+                      type="password" 
+                      class="form-input"
+                      placeholder="Password"
+                      required
+                      [(ngModel)]="signInForm.password"
+                      name="password"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                  <div class="forgot-password">
+                    <a href="#" class="forgot-link" (click)="handleForgotPassword($event)">Forgot password?</a>
+                  </div>
+                </div>
+
+                <button type="submit" class="login-btn" [disabled]="isLoading">
+                  <div class="btn-bg-effect"></div>
+                  <div class="btn-content">
+                    <span class="btn-text" *ngIf="!isLoading">Sign In</span>
+                    <span class="btn-text" *ngIf="isLoading">Signing in...</span>
+                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                    <svg class="btn-icon loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading">
+                      <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                    </svg>
+                  </div>
+                </button>
+              </form>
+            </div>
+
+            <!-- Register Form -->
+            <div class="tab-pane" [class.active]="activeTab === 'register'">
+              <div class="welcome-section">
+                <h2 class="welcome-title">Create account</h2>
+                <p class="welcome-subtitle">Join thousands managing their finances smarter</p>
+              </div>
+
+              <form class="auth-form" (ngSubmit)="onRegisterSubmit($event)">
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <input 
+                      type="text" 
+                      class="form-input"
+                      placeholder="Full name"
+                      required
+                      [(ngModel)]="registerForm.name"
+                      name="name"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <input 
+                      type="email" 
+                      class="form-input"
+                      placeholder="Email address"
+                      required
+                      [(ngModel)]="registerForm.email"
+                      name="email"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                    <input 
+                      type="password" 
+                      class="form-input"
+                      placeholder="Password"
+                      required
+                      [(ngModel)]="registerForm.password"
+                      name="password"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="input-container">
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                    <input 
+                      type="password" 
+                      class="form-input"
+                      placeholder="Confirm password"
+                      required
+                      [(ngModel)]="registerForm.confirmPassword"
+                      name="confirmPassword"
+                    />
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+
+                <div class="terms-checkbox">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [(ngModel)]="agreeToTerms" name="terms" required>
+                    <span class="checkmark"></span>
+                    <span class="checkbox-text">I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a></span>
+                  </label>
+                </div>
+
+                <button type="submit" class="login-btn" [disabled]="isLoading || !agreeToTerms">
+                  <div class="btn-bg-effect"></div>
+                  <div class="btn-content">
+                    <span class="btn-text" *ngIf="!isLoading">Create Account</span>
+                    <span class="btn-text" *ngIf="isLoading">Creating account...</span>
+                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                    <svg class="btn-icon loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading">
+                      <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                    </svg>
+                  </div>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Social Login Divider -->
+          <div class="divider">
+            <span class="divider-text">Or continue with</span>
+          </div>
+
+          <!-- Social Login Buttons -->
+          <div class="social-login">
+            <button class="social-btn google-btn" (click)="socialLogin('google')">
+              <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Google
+            </button>
+            
+            <button class="social-btn apple-btn" (click)="socialLogin('apple')">
+              <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.98.95-2.05.88-3.08.42-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.42C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              Apple
+            </button>
+            
+            <button class="social-btn microsoft-btn" (click)="socialLogin('microsoft')">
+              <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="9" height="9" fill="#f25022"/>
+                <rect x="13" y="2" width="9" height="9" fill="#7fba00"/>
+                <rect x="2" y="13" width="9" height="9" fill="#00a4ef"/>
+                <rect x="13" y="13" width="9" height="9" fill="#ffb900"/>
+              </svg>
+              Microsoft
+            </button>
+          </div>
+
+          <!-- Quick Access for Demo -->
           <div class="quick-access">
-            <button class="quick-btn admin-btn" (click)="quickLogin('administrator')">
+            <button class="quick-btn" (click)="quickLogin('administrator')">
               <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
-              Admin
+              Demo Admin
             </button>
-            <button class="quick-btn user-btn" (click)="quickLogin('user')">
+            <button class="quick-btn" (click)="quickLogin('user')">
               <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
-              User
+              Demo User
             </button>
           </div>
         </div>
@@ -137,282 +299,566 @@ interface LoginCredentials {
     </div>
   `,
   styles: [`
-    /* Main Container - Two Column Layout */
-    .login-container {
-      display: flex;
-      min-height: 100vh;
-      overflow: hidden;
+    /* Global reset and violet background */
+    :host {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #2a0f4a 0%, #4a148c 50%, #3a0f6a 100%) !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
-    
-    /* LEFT COLUMN - Hero Panel */
-    .hero-panel {
-      flex: 1.2;
-      background: #0a0f1e;
+
+    /* Hide all scrollbars */
+    ::-webkit-scrollbar {
+      width: 0px !important;
+      height: 0px !important;
+      display: none !important;
+    }
+
+    * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    /* Force body and html */
+    ::ng-deep html, ::ng-deep body {
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 100vh !important;
+      overflow: hidden !important;
+      background: linear-gradient(135deg, #2a0f4a 0%, #4a148c 50%, #3a0f6a 100%) !important;
+    }
+
+    /* Auth Container */
+    .auth-container {
       position: relative;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 80px 60px;
-      min-width: 600px;
+      padding: 20px;
     }
-    
-    /* Dot Grid Background */
-    .dot-grid {
+
+    /* Animated Background */
+    .animated-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      top: -10%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      bottom: -10%;
+      right: -10%;
+      animation-delay: 7s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(135deg, #a855f7, #8b5cf6);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 14s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(30px, -30px) rotate(90deg); }
+      50% { transform: translate(-20px, 20px) rotate(180deg); }
+      75% { transform: translate(-30px, -20px) rotate(270deg); }
+    }
+
+    .floating-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .shape {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: rotate 30s linear infinite;
+    }
+
+    .shape-1 {
+      width: 100px;
+      height: 100px;
+      top: 20%;
+      left: 10%;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 150px;
+      height: 150px;
+      top: 60%;
+      right: 10%;
+      border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+      animation-delay: 10s;
+    }
+
+    .shape-3 {
+      width: 80px;
+      height: 80px;
+      bottom: 20%;
+      left: 30%;
+      border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+      animation-delay: 20s;
+    }
+
+    .shape-4 {
+      width: 120px;
+      height: 120px;
+      top: 30%;
+      right: 30%;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      animation-delay: 5s;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Auth Card */
+    .auth-card {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      z-index: 10;
+    }
+
+    .glass-bg {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-      background-size: 30px 30px;
-      opacity: 0.4;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
-    
-    /* Hero Content */
-    .hero-content {
+
+    .auth-content {
       position: relative;
-      z-index: 1;
+      padding: 48px 40px;
+      z-index: 2;
+    }
+
+    /* Logo Section */
+    .logo-section {
       text-align: center;
-      color: white;
-      max-width: 700px;
-      width: 100%;
+      margin-bottom: 40px;
     }
-    
-    .hero-logo {
-      margin-bottom: 50px;
+
+    .logo-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 24px;
     }
-    
-    .logo-mark {
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+
+    .logo-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      border: 3px solid rgba(139, 92, 246, 0.3);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .logo-core {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
-      font-size: 40px;
-      font-weight: bold;
-      box-shadow: 0 25px 50px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+      z-index: 2;
     }
-    
-    .hero-title {
-      font-size: 56px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      line-height: 1.1;
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent);
+      border-radius: 50%;
+      animation: glow 3s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+    }
+
+    @keyframes glow {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    .brand-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: white;
+      margin: 0 0 8px 0;
       background: linear-gradient(135deg, #ffffff, #e2e8f0);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    
-    .hero-subtitle {
-      font-size: 20px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 70px;
-    }
-    
-    .stats-pills {
-      display: flex;
-      gap: 32px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .pill {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      padding: 20px 28px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      min-width: 140px;
-    }
-    
-    .pill-number {
-      font-size: 20px;
-      font-weight: 700;
-      color: #6366f1;
-      margin-bottom: 4px;
-    }
-    
-    .pill-label {
+
+    .brand-subtitle {
       font-size: 14px;
       color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 4px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    
-    /* RIGHT COLUMN - Form Panel */
-    .form-panel {
-      flex: 0.8;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 60px;
-      overflow-y: auto;
-      min-width: 500px;
-    }
-    
-    .form-container {
-      width: 100%;
-      max-width: 520px;
-    }
-    
-    .form-logo {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    
-    .logo-icon {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      font-size: 20px;
-      font-weight: bold;
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
       color: white;
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
     }
-    
-    .brand-label {
+
+    .tab-btn:hover:not(.active) {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Tab Content */
+    .tab-content {
+      margin-bottom: 32px;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Welcome Section */
+    .welcome-section {
       text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: #6366f1;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      margin-bottom: 32px;
     }
-    
-    .form-title {
+
+    .welcome-title {
       font-size: 28px;
       font-weight: 700;
-      color: #1f2937;
-      text-align: center;
-      margin-bottom: 24px;
+      color: white;
+      margin: 0 0 12px 0;
     }
-    
+
+    .welcome-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      line-height: 1.5;
+    }
+
     /* Form Styles */
-    .login-form {
+    .auth-form {
+      margin-bottom: 32px;
+    }
+
+    .input-group {
       margin-bottom: 24px;
     }
-    
-    .form-group {
-      margin-bottom: 18px;
-    }
-    
-    .form-label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 6px;
-    }
-    
-    .input-wrapper {
+
+    .input-container {
       position: relative;
     }
-    
+
+    .input-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
     .form-input {
       width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 15px;
-      color: #1f2937;
-      background: #ffffff;
-      transition: all 0.2s ease;
+      padding: 18px 20px 18px 56px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
       outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
-    
-    .form-input:focus {
-      border-left: 3px solid #6366f1;
-      border-color: #e5e7eb;
-      box-shadow: 0 0 0 0 transparent;
-    }
-    
+
     .form-input::placeholder {
-      color: #9ca3af;
+      color: rgba(255, 255, 255, 0.4);
     }
-    
+
+    .form-input:focus {
+      border-color: rgba(139, 92, 246, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+    }
+
+    .form-input:focus + .input-icon {
+      color: rgba(139, 92, 246, 0.8);
+    }
+
+    .input-border {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #6366f1);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .form-input:focus ~ .input-border {
+      transform: scaleX(1);
+    }
+
     .forgot-password {
       text-align: right;
-      margin-top: 8px;
+      margin-top: 12px;
     }
-    
+
     .forgot-link {
+      color: rgba(139, 92, 246, 0.8);
+      text-decoration: none;
       font-size: 14px;
-      color: #6366f1;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .forgot-link:hover {
+      color: rgba(139, 92, 246, 1);
+      text-decoration: underline;
+    }
+
+    /* Terms Checkbox */
+    .terms-checkbox {
+      margin-bottom: 24px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkmark {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .checkbox-label input[type="checkbox"]:checked + .checkmark {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      border-color: #8b5cf6;
+    }
+
+    .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .terms-link {
+      color: rgba(139, 92, 246, 0.8);
       text-decoration: none;
       font-weight: 500;
     }
-    
-    .forgot-link:hover {
-      color: #4f46e5;
+
+    .terms-link:hover {
+      color: rgba(139, 92, 246, 1);
       text-decoration: underline;
     }
-    
-    .login-button {
+
+    /* Login Button */
+    .login-btn {
       width: 100%;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      padding: 18px 24px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
       border: none;
-      border-radius: 8px;
+      border-radius: 16px;
       color: white;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      margin-top: 16px;
+    }
+
+    .btn-content {
+      position: relative;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 6px;
     }
-    
-    .login-button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+
+    .btn-bg-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #a855f7, #8b5cf6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    
-    .login-button:active {
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+    }
+
+    .login-btn:hover .btn-bg-effect {
+      opacity: 1;
+    }
+
+    .login-btn:active {
       transform: translateY(0);
     }
-    
-    .login-button:disabled {
+
+    .login-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
-    
-    .button-text {
-      font-size: 16px;
-      font-weight: 600;
+
+    .btn-icon {
+      transition: transform 0.3s ease;
     }
-    
-    .button-arrow {
-      transition: transform 0.2s ease;
+
+    .login-btn:hover .btn-icon {
+      transform: translateX(4px);
     }
-    
-    .login-button:hover .button-arrow {
-      transform: translateX(2px);
+
+    .btn-icon.loading {
+      animation: spin 1s linear infinite;
     }
-    
+
     /* Divider */
     .divider {
       position: relative;
       text-align: center;
-      margin: 20px 0;
+      margin: 32px 0 24px 0;
     }
-    
+
     .divider::before {
       content: '';
       position: absolute;
@@ -420,169 +866,193 @@ interface LoginCredentials {
       left: 0;
       right: 0;
       height: 1px;
-      background: #e5e7eb;
+      background: rgba(255, 255, 255, 0.1);
     }
-    
+
     .divider-text {
-      background: #ffffff;
+      background: rgba(15, 15, 35, 0.8);
       padding: 0 16px;
-      font-size: 14px;
-      color: #6b7280;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
       position: relative;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    
-    /* Quick Access Buttons */
+
+    /* Social Login */
+    .social-login {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Quick Access */
     .quick-access {
       display: flex;
       gap: 12px;
     }
-    
+
     .quick-btn {
       flex: 1;
-      padding: 10px 14px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #374151;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
+      backdrop-filter: blur(10px);
     }
-    
+
     .quick-btn:hover {
-      background: #6366f1;
-      color: white;
-      border-color: #6366f1;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
     }
-    
+
     .btn-icon {
       width: 16px;
       height: 16px;
       flex-shrink: 0;
     }
-    
+
+    /* Loading Animation */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* Responsive Design */
-    @media (max-width: 1200px) {
-      .hero-panel {
-        flex: 1;
-        min-width: 500px;
-        padding: 60px 40px;
-      }
-      
-      .form-panel {
-        flex: 1;
-        min-width: 450px;
-        padding: 60px 40px;
-      }
-      
-      .hero-content {
-        max-width: 600px;
-      }
-      
-      .hero-title {
-        font-size: 48px;
-      }
-    }
-    
     @media (max-width: 768px) {
-      .login-container {
-        flex-direction: column;
+      .auth-container {
+        padding: 16px !important;
       }
       
-      .hero-panel {
-        min-height: 40vh;
-        padding: 40px 20px;
-        min-width: auto;
+      .auth-content {
+        padding: 32px 24px;
       }
       
-      .hero-title {
-        font-size: 36px;
-      }
-      
-      .hero-subtitle {
-        font-size: 16px;
-        margin-bottom: 40px;
-      }
-      
-      .stats-pills {
-        gap: 16px;
-      }
-      
-      .pill {
-        padding: 12px 16px;
-      }
-      
-      .form-panel {
-        min-height: 60vh;
-        padding: 40px 20px;
-        min-width: auto;
-      }
-      
-      .form-title {
-        font-size: 28px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .hero-panel,
-      .form-panel {
-        padding: 30px 16px;
-      }
-      
-      .hero-title {
+      .brand-title {
         font-size: 28px;
       }
       
-      .stats-pills {
-        flex-direction: column;
-        align-items: center;
+      .welcome-title {
+        font-size: 24px;
       }
       
-      .pill {
-        width: 100%;
-        max-width: 200px;
+      .social-login {
+        flex-direction: column;
       }
       
       .quick-access {
         flex-direction: column;
       }
     }
-    
-    /* Loading Animation */
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+
+    @media (max-width: 480px) {
+      .auth-content {
+        padding: 24px 20px;
+      }
+      
+      .orb-1, .orb-2, .orb-3 {
+        filter: blur(60px);
+      }
+      
+      .orb-1 {
+        width: 300px;
+        height: 300px;
+      }
+      
+      .orb-2 {
+        width: 250px;
+        height: 250px;
+      }
+      
+      .orb-3 {
+        width: 200px;
+        height: 200px;
+      }
     }
   `]
 })
 export class LoginComponent {
-  credentials: LoginCredentials = { email: '', password: '' };
+  activeTab: 'signin' | 'register' = 'signin';
   isLoading = false;
+  agreeToTerms = false;
+  
+  signInForm: LoginCredentials = { email: '', password: '' };
+  registerForm: RegisterCredentials = { 
+    name: '', 
+    email: '', 
+    password: '', 
+    confirmPassword: '' 
+  };
   
   constructor(private router: Router, private dataService: DataService) {}
 
-  onLoginSubmit(event: Event) {
+  switchTab(tab: 'signin' | 'register') {
+    this.activeTab = tab;
+    // Reset forms when switching tabs
+    if (tab === 'signin') {
+      this.signInForm = { email: '', password: '' };
+    } else {
+      this.registerForm = { name: '', email: '', password: '', confirmPassword: '' };
+      this.agreeToTerms = false;
+    }
+  }
+
+  onSignInSubmit(event: Event) {
     event.preventDefault();
     this.isLoading = true;
     
-    console.log('Login submitted', this.credentials);
+    console.log('Sign in submitted', this.signInForm);
     
-    // Simulate login validation - in real app, this would be an API call
+    // Simulate login validation
     setTimeout(() => {
-      // Simple validation for demo
-      if (this.credentials.email && this.credentials.password) {
+      if (this.signInForm.email && this.signInForm.password) {
         // Set user in data service to satisfy auth guard
         this.dataService.setCurrentUser({
           id: '1',
           name: 'Adarsh Pradeep',
-          email: this.credentials.email,
+          email: this.signInForm.email,
           role: 'administrator' as UserRole,
           avatar: 'AP',
           department: 'IT',
@@ -591,14 +1061,84 @@ export class LoginComponent {
         
         // Store login state
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', this.credentials.email);
+        localStorage.setItem('userEmail', this.signInForm.email);
         
-        console.log('Login successful, navigating to dashboard');
+        console.log('Sign in successful, navigating to dashboard');
         this.router.navigate(['/dashboard']);
       } else {
         console.error('Invalid credentials');
         // Could show error message here
       }
+      this.isLoading = false;
+    }, 1000);
+  }
+
+  onRegisterSubmit(event: Event) {
+    event.preventDefault();
+    
+    // Validate passwords match
+    if (this.registerForm.password !== this.registerForm.confirmPassword) {
+      console.error('Passwords do not match');
+      // Could show error message here
+      return;
+    }
+    
+    this.isLoading = true;
+    
+    console.log('Register submitted', this.registerForm);
+    
+    // Simulate registration
+    setTimeout(() => {
+      // Set user in data service
+      this.dataService.setCurrentUser({
+        id: '2',
+        name: this.registerForm.name,
+        email: this.registerForm.email,
+        role: 'user' as UserRole,
+        avatar: this.registerForm.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+        department: 'Finance',
+        lastLogin: new Date()
+      });
+      
+      // Store login state
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userEmail', this.registerForm.email);
+      
+      console.log('Registration successful, navigating to dashboard');
+      this.router.navigate(['/dashboard']);
+      this.isLoading = false;
+    }, 1500);
+  }
+
+  handleForgotPassword(event: Event) {
+    event.preventDefault();
+    console.log('Forgot password clicked');
+    // Could implement password reset flow here
+  }
+
+  socialLogin(provider: 'google' | 'apple' | 'microsoft') {
+    this.isLoading = true;
+    
+    console.log(`Social login with ${provider}`);
+    
+    // Simulate social login
+    setTimeout(() => {
+      const userData = {
+        id: '3',
+        name: provider === 'google' ? 'Google User' : provider === 'apple' ? 'Apple User' : 'Microsoft User',
+        email: `user@${provider}.com`,
+        role: 'user' as UserRole,
+        avatar: provider.charAt(0).toUpperCase(),
+        department: 'General',
+        lastLogin: new Date()
+      };
+      
+      this.dataService.setCurrentUser(userData);
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userEmail', userData.email);
+      
+      console.log(`${provider} login successful, navigating to dashboard`);
+      this.router.navigate(['/dashboard']);
       this.isLoading = false;
     }, 1000);
   }
@@ -610,14 +1150,14 @@ export class LoginComponent {
     const adminCredentials = { email: 'admin@zorvyn.com', password: 'admin123' };
     const userCredentials = { email: 'user@zorvyn.com', password: 'user123' };
     
-    this.credentials = role === 'administrator' ? adminCredentials : userCredentials;
+    this.signInForm = role === 'administrator' ? adminCredentials : userCredentials;
     
     // Simulate login
     setTimeout(() => {
       this.dataService.setCurrentUser({
         id: role === 'administrator' ? '1' : '2',
         name: role === 'administrator' ? 'Adarsh Pradeep' : 'Sarah Johnson',
-        email: this.credentials.email,
+        email: this.signInForm.email,
         role: role,
         avatar: role === 'administrator' ? 'AP' : 'SJ',
         department: role === 'administrator' ? 'IT' : 'Finance',
@@ -625,7 +1165,7 @@ export class LoginComponent {
       });
       
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userEmail', this.credentials.email);
+      localStorage.setItem('userEmail', this.signInForm.email);
       
       console.log('Quick login successful as ' + role + ', navigating to dashboard');
       this.router.navigate(['/dashboard']);

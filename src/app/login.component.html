@@ -1,119 +1,274 @@
-<div class="login-container">
-  <!-- LEFT COLUMN - Hero Panel -->
-  <div class="hero-panel">
-    <!-- Dot Grid Background -->
-    <div class="dot-grid"></div>
-    
-    <!-- Content -->
-    <div class="hero-content">
-      <!-- Logo -->
-      <div class="hero-logo">
-        <div class="logo-mark">Z</div>
-      </div>
-      
-      <!-- Headlines -->
-      <h1 class="hero-title">Your Financial Companion</h1>
-      <p class="hero-subtitle">Track expenses, monitor investments, and achieve your financial goals with intelligent insights.</p>
-      
-      <!-- Stats Pills -->
-      <div class="stats-pills">
-        <div class="pill">
-          <div class="pill-number">10k+</div>
-          <div class="pill-label">Users</div>
-        </div>
-        <div class="pill">
-          <div class="pill-number">Bank-grade</div>
-          <div class="pill-label">Security</div>
-        </div>
-        <div class="pill">
-          <div class="pill-number">Real-time</div>
-          <div class="pill-label">Sync</div>
-        </div>
-      </div>
-    </div>
+<div class="auth-container">
+  <!-- Background Elements -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
   </div>
   
-  <!-- RIGHT COLUMN - Login Form Panel -->
-  <div class="form-panel">
-    <div class="form-container">
-      <!-- Logo Icon -->
-      <div class="form-logo">
-        <div class="logo-icon">Z</div>
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+
+  <!-- Main Auth Card -->
+  <div class="auth-card">
+    <div class="glass-bg"></div>
+    <div class="auth-content">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-container">
+          <div class="logo-ring"></div>
+          <div class="logo-core">
+            <span class="logo-text">Z</span>
+          </div>
+          <div class="logo-glow"></div>
+        </div>
+        <h1 class="brand-title">Zorvyn Finance</h1>
+        <p class="brand-subtitle">Your intelligent financial companion</p>
       </div>
-      
-      <!-- Brand Label -->
-      <div class="brand-label">ZORVYN FINANCE</div>
-      
-      <!-- Welcome Heading -->
-      <h2 class="form-title">Welcome back</h2>
-      
-      <!-- Login Form -->
-      <form class="login-form" (ngSubmit)="onLoginSubmit($event)">
-        <div class="form-group">
-          <label for="email" class="form-label">Email Address</label>
-          <div class="input-wrapper">
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              class="form-input"
-              placeholder="Enter your email address"
-              required
-              [(ngModel)]="credentials.email"
-            />
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <div class="input-wrapper">
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              class="form-input"
-              placeholder="Enter your password"
-              required
-              [(ngModel)]="credentials.password"
-            />
-          </div>
-          <div class="forgot-password">
-            <a href="#" class="forgot-link">Forgot password?</a>
-          </div>
-        </div>
-        
-        <button type="submit" class="login-button" [disabled]="isLoading">
-          <span class="button-text" *ngIf="!isLoading">Sign In</span>
-          <span class="button-text" *ngIf="isLoading">Signing in...</span>
-          <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-          <svg class="button-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading" style="animation: spin 1s linear infinite;">
-            <path d="M21 12a9 9 0 11-6.219-8.56"/>
-          </svg>
+
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'signin'"
+          (click)="switchTab('signin')"
+        >
+          Sign In
         </button>
-      </form>
-      
-      <!-- Divider -->
-      <div class="divider">
-        <span class="divider-text">Or continue as</span>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'register'"
+          (click)="switchTab('register')"
+        >
+          Register
+        </button>
       </div>
-      
-      <!-- Quick Access Buttons -->
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Sign In Form -->
+        <div class="tab-pane" [class.active]="activeTab === 'signin'">
+          <div class="welcome-section">
+            <h2 class="welcome-title">Welcome back</h2>
+            <p class="welcome-subtitle">Enter your credentials to access your account</p>
+          </div>
+
+          <form class="auth-form" (ngSubmit)="onSignInSubmit($event)">
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <input 
+                  type="email" 
+                  class="form-input"
+                  placeholder="Email address"
+                  required
+                  [(ngModel)]="signInForm.email"
+                  name="email"
+                />
+                <div class="input-border"></div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <input 
+                  type="password" 
+                  class="form-input"
+                  placeholder="Password"
+                  required
+                  [(ngModel)]="signInForm.password"
+                  name="password"
+                />
+                <div class="input-border"></div>
+              </div>
+              <div class="forgot-password">
+                <a href="#" class="forgot-link" (click)="handleForgotPassword($event)">Forgot password?</a>
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn" [disabled]="isLoading">
+              <div class="btn-bg-effect"></div>
+              <div class="btn-content">
+                <span class="btn-text" *ngIf="!isLoading">Sign In</span>
+                <span class="btn-text" *ngIf="isLoading">Signing in...</span>
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+                <svg class="btn-icon loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading">
+                  <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+              </div>
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Form -->
+        <div class="tab-pane" [class.active]="activeTab === 'register'">
+          <div class="welcome-section">
+            <h2 class="welcome-title">Create account</h2>
+            <p class="welcome-subtitle">Join thousands managing their finances smarter</p>
+          </div>
+
+          <form class="auth-form" (ngSubmit)="onRegisterSubmit($event)">
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input 
+                  type="text" 
+                  class="form-input"
+                  placeholder="Full name"
+                  required
+                  [(ngModel)]="registerForm.name"
+                  name="name"
+                />
+                <div class="input-border"></div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <input 
+                  type="email" 
+                  class="form-input"
+                  placeholder="Email address"
+                  required
+                  [(ngModel)]="registerForm.email"
+                  name="email"
+                />
+                <div class="input-border"></div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <input 
+                  type="password" 
+                  class="form-input"
+                  placeholder="Password"
+                  required
+                  [(ngModel)]="registerForm.password"
+                  name="password"
+                />
+                <div class="input-border"></div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-container">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <input 
+                  type="password" 
+                  class="form-input"
+                  placeholder="Confirm password"
+                  required
+                  [(ngModel)]="registerForm.confirmPassword"
+                  name="confirmPassword"
+                />
+                <div class="input-border"></div>
+              </div>
+            </div>
+
+            <div class="terms-checkbox">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="agreeToTerms" name="terms" required>
+                <span class="checkmark"></span>
+                <span class="checkbox-text">I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a></span>
+              </label>
+            </div>
+
+            <button type="submit" class="login-btn" [disabled]="isLoading || !agreeToTerms">
+              <div class="btn-bg-effect"></div>
+              <div class="btn-content">
+                <span class="btn-text" *ngIf="!isLoading">Create Account</span>
+                <span class="btn-text" *ngIf="isLoading">Creating account...</span>
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isLoading">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+                <svg class="btn-icon loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="isLoading">
+                  <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+              </div>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Social Login Divider -->
+      <div class="divider">
+        <span class="divider-text">Or continue with</span>
+      </div>
+
+      <!-- Social Login Buttons -->
+      <div class="social-login">
+        <button class="social-btn google-btn" (click)="socialLogin('google')">
+          <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Google
+        </button>
+        
+        <button class="social-btn apple-btn" (click)="socialLogin('apple')">
+          <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.05 20.28c-.98.95-2.05.88-3.08.42-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.42C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+          </svg>
+          Apple
+        </button>
+        
+        <button class="social-btn microsoft-btn" (click)="socialLogin('microsoft')">
+          <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="9" height="9" fill="#f25022"/>
+            <rect x="13" y="2" width="9" height="9" fill="#7fba00"/>
+            <rect x="2" y="13" width="9" height="9" fill="#00a4ef"/>
+            <rect x="13" y="13" width="9" height="9" fill="#ffb900"/>
+          </svg>
+          Microsoft
+        </button>
+      </div>
+
+      <!-- Quick Access for Demo -->
       <div class="quick-access">
-        <button class="quick-btn admin-btn" (click)="quickLogin('administrator')">
+        <button class="quick-btn" (click)="quickLogin('administrator')">
           <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-          Admin
+          Demo Admin
         </button>
-        <button class="quick-btn user-btn" (click)="quickLogin('user')">
+        <button class="quick-btn" (click)="quickLogin('user')">
           <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          User
+          Demo User
         </button>
       </div>
     </div>

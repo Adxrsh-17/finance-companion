@@ -898,58 +898,77 @@ import { interval, Subscription } from 'rxjs';
       border: 2px solid #ffffff;
     }
 
+    /* Currency Switcher - Complete Rework */
     .currency-switcher {
       position: relative;
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 16px;
-      background: rgba(139, 92, 246, 0.2);
-      border: 2px solid rgba(139, 92, 246, 0.6);
+      padding: 10px 16px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 2px solid rgba(139, 92, 246, 0.4);
       border-radius: 12px;
-      color: #1a1a1a !important;
+      color: #ffffff !important;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(16px);
       z-index: 1000;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
     }
 
+    .currency-switcher:hover {
+      background: rgba(139, 92, 246, 0.25);
+      border-color: rgba(139, 92, 246, 0.6);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .currency-switcher .curr-flag,
+    .currency-switcher .curr-code {
+      color: inherit !important;
+      font-weight: inherit;
+    }
+
+    /* Currency Menu - Enhanced */
     .currency-menu {
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
-      background: rgba(255, 255, 255, 1);
+      background: rgba(15, 15, 35, 0.95);
       border: 2px solid rgba(139, 92, 246, 0.3);
       border-radius: 16px;
-      backdrop-filter: none;
+      backdrop-filter: blur(20px);
       overflow: hidden;
-      min-width: 280px;
+      min-width: 300px;
       z-index: 1000;
-      animation: dropdownSlide 0.3s ease-out;
+      animation: dropdownSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     @keyframes dropdownSlide {
       from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px) scale(0.95);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
     }
 
+    /* Currency Options - New Logic */
     .currency-option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
+      gap: 14px;
+      padding: 16px 20px;
       cursor: pointer;
       transition: all 0.2s ease;
       border-bottom: 1px solid rgba(139, 92, 246, 0.1);
       position: relative;
+      background: transparent;
     }
 
     .currency-option:last-child {
@@ -957,52 +976,115 @@ import { interval, Subscription } from 'rxjs';
     }
 
     .currency-option:hover {
-      background: rgba(139, 92, 246, 0.1);
+      background: rgba(139, 92, 246, 0.08);
+      transform: translateX(2px);
     }
 
     .currency-option.active {
-      background: rgba(139, 92, 246, 0.15);
-      border-left: 3px solid rgba(139, 92, 246, 0.6);
+      background: rgba(139, 92, 246, 0.12);
+      border-left: 3px solid rgba(139, 92, 246, 0.8);
     }
 
+    .currency-option.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    }
+
+    /* Currency Flag */
     .opt-flag {
-      font-size: 20px;
-      width: 28px;
-      height: 28px;
+      font-size: 22px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(139, 92, 246, 0.1);
+      background: rgba(139, 92, 246, 0.15);
       border-radius: 50%;
       flex-shrink: 0;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      transition: all 0.2s ease;
     }
 
+    .currency-option:hover .opt-flag {
+      background: rgba(139, 92, 246, 0.25);
+      transform: scale(1.05);
+    }
+
+    .currency-option.active .opt-flag {
+      background: rgba(139, 92, 246, 0.3);
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Currency Info */
     .opt-info {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
 
     .opt-code {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff !important;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
     }
 
     .opt-label {
       font-size: 12px;
-      color: #666;
+      color: rgba(255, 255, 255, 0.6) !important;
       font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: all 0.2s ease;
     }
 
+    .currency-option:hover .opt-code {
+      color: #ffffff !important;
+    }
+
+    .currency-option:hover .opt-label {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .currency-option.active .opt-code {
+      color: #ffffff !important;
+      text-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+    }
+
+    .currency-option.active .opt-label {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* Currency Symbol */
     .opt-symbol {
       font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-      background: rgba(139, 92, 246, 0.1);
-      padding: 4px 8px;
-      border-radius: 6px;
+      font-weight: 700;
+      color: #ffffff !important;
+      background: rgba(139, 92, 246, 0.2);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      transition: all 0.2s ease;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .currency-option:hover .opt-symbol {
+      background: rgba(139, 92, 246, 0.3);
+      transform: scale(1.05);
+    }
+
+    .currency-option.active .opt-symbol {
+      background: rgba(139, 92, 246, 0.4);
+      border-color: rgba(139, 92, 246, 0.6);
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
     }
 
     .page-content {
@@ -1030,48 +1112,121 @@ import { interval, Subscription } from 'rxjs';
     }
 
     :host-context(html.light) .logo-subtitle,
-    :host-context(html.light) .opt-label,
-    :host-context(html.light) .opt-symbol,
-    :host-context(html.light) .header-subtitle {
+    /* Light Mode Currency Styles - Complete Rework */
+    :host-context(html.light) .currency-switcher {
+      background: rgba(139, 92, 246, 0.08) !important;
+      border: 2px solid rgba(139, 92, 246, 0.3) !important;
+      color: #000000 !important;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1) !important;
+    }
+
+    :host-context(html.light) .currency-switcher:hover {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border-color: rgba(139, 92, 246, 0.5) !important;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.2) !important;
+    }
+
+    :host-context(html.light) .currency-menu {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 2px solid rgba(139, 92, 246, 0.2) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    :host-context(html.light) .currency-option {
+      border-bottom-color: rgba(139, 92, 246, 0.08) !important;
+    }
+
+    :host-context(html.light) .currency-option:hover {
+      background: rgba(139, 92, 246, 0.05) !important;
+    }
+
+    :host-context(html.light) .currency-option.active {
+      background: rgba(139, 92, 246, 0.08) !important;
+    }
+
+    :host-context(html.light) .currency-option.active::before {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1) !important;
+    }
+
+    :host-context(html.light) .opt-flag {
+      background: rgba(139, 92, 246, 0.08) !important;
+      border-color: rgba(139, 92, 246, 0.2) !important;
+    }
+
+    :host-context(html.light) .currency-option:hover .opt-flag {
+      background: rgba(139, 92, 246, 0.12) !important;
+    }
+
+    :host-context(html.light) .currency-option.active .opt-flag {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border-color: rgba(139, 92, 246, 0.3) !important;
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.2) !important;
+    }
+
+    :host-context(html.light) .opt-code {
+      color: #000000 !important;
+    }
+
+    :host-context(html.light) .opt-label {
       color: #374151 !important;
     }
 
-    :host-context(html.light) .header {
-      background: rgba(255, 255, 255, 0.95) !important;
-      border-bottom: 2px solid rgba(139, 92, 246, 0.5) !important;
-    }
-
-    :host-context(html.light) .header-title {
+    :host-context(html.light) .currency-option:hover .opt-code {
       color: #000000 !important;
     }
 
-    :host-context(html.light) .btn-glass,
-    :host-context(html.light) .currency-switcher {
+    :host-context(html.light) .currency-option:hover .opt-label {
+      color: #4b5563 !important;
+    }
+
+    :host-context(html.light) .currency-option.active .opt-code {
+      color: #000000 !important;
+      text-shadow: 0 0 8px rgba(139, 92, 246, 0.3) !important;
+    }
+
+    :host-context(html.light) .currency-option.active .opt-label {
+      color: #374151 !important;
+    }
+
+    :host-context(html.light) .opt-symbol {
+      color: #000000 !important;
+      background: rgba(139, 92, 246, 0.08) !important;
+      border-color: rgba(139, 92, 246, 0.2) !important;
+    }
+
+    :host-context(html.light) .currency-option:hover .opt-symbol {
+      background: rgba(139, 92, 246, 0.12) !important;
+    }
+
+    :host-context(html.light) .currency-option.active .opt-symbol {
       background: rgba(139, 92, 246, 0.15) !important;
-      border: 2px solid rgba(139, 92, 246, 0.5) !important;
-      color: #000000 !important;
-    }
-
-    /* Ensure all currency text is dark */
-    .curr-flag,
-    .curr-code,
-    .opt-flag {
-      color: #1a1a1a !important;
-    }
-    
-    /* Add shadow support for currency flags */
-    .curr-flag {
-      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
-    }
-    
-    .opt-flag {
-      filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.25));
+      border-color: rgba(139, 92, 246, 0.3) !important;
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.2) !important;
     }
 
     :host-context(html.light) .btn-glass:hover,
     :host-context(html.light) .currency-switcher:hover {
       background: rgba(0, 0, 0, 0.1) !important;
       border-color: #06b6d4 !important;
+    }
+
+    /* Light Mode Header Styles - Missing! */
+    :host-context(html.light) .header {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-bottom: 2px solid rgba(139, 92, 246, 0.3) !important;
+    }
+
+    :host-context(html.light) .header-title {
+      color: #000000 !important;
+      text-shadow: none !important;
+    }
+
+    :host-context(html.light) .header-subtitle {
+      color: #374151 !important;
+    }
+
+    :host-context(html.light) .accent-line {
+      background: linear-gradient(90deg, #06b6d4, #7c3aed, #ec4899) !important;
     }
 
     :host-context(html.light) .sidebar-user-panel {
@@ -1113,6 +1268,24 @@ import { interval, Subscription } from 'rxjs';
     }
 
     :host-context(html.light) .currency-option {
+      color: #000000 !important;
+    }
+
+    /* Light mode currency dropdown text */
+    :host-context(html.light) .opt-code {
+      color: #000000 !important;
+    }
+
+    :host-context(html.light) .opt-label {
+      color: #374151 !important;
+    }
+
+    :host-context(html.light) .opt-symbol {
+      color: #000000 !important;
+      background: rgba(139, 92, 246, 0.1) !important;
+    }
+
+    :host-context(html.light) .currency-switcher {
       color: #000000 !important;
     }
 
