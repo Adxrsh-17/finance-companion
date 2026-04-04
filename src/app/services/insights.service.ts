@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { FinanceStateService } from './finance-state.service';
+import { AdminSettingsService } from './admin-settings.service';
 import { Transaction } from '../models/transaction.model';
 
 export interface InsightStory {
@@ -95,12 +96,27 @@ export interface BudgetDeviationResult {
 @Injectable({ providedIn: 'root' })
 export class InsightsService {
   private readonly financeService = inject(FinanceStateService);
+  private readonly adminSettings = inject(AdminSettingsService);
   private readonly currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
+
+  // ── helper methods ─────────────────────────────────────
+  private applySimulationModifiers(transactions: Transaction[]): Transaction[] {
+    if (!this.adminSettings.isSimulationActive()) {
+      return transactions;
+    }
+    
+    return transactions.map((tx: Transaction) => ({
+      ...tx,
+      amount: tx.type === 'income' 
+        ? tx.amount * this.adminSettings.incomeModifier
+        : tx.amount * this.adminSettings.expenseModifier
+    }));
+  }
 
   // ── greeting ──────────────────────────────────────────
   getGreeting(name: string): string {
@@ -111,8 +127,12 @@ export class InsightsService {
 
   // ── summary stats ──────────────────────────────────────
   getSummaryStats(current: Transaction[], previous: Transaction[]): SummaryStats {
-    const income = current.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-    const expense = current.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+    // Apply simulation modifiers to transactions
+    const modifiedCurrent = this.applySimulationModifiers(current);
+    const modifiedPrevious = this.applySimulationModifiers(previous);
+    
+    const income = modifiedCurrent.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const expense = modifiedCurrent.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     
     // If no data, return realistic defaults
     if (income === 0 && expense === 0) {
@@ -402,23 +422,26 @@ export class InsightsService {
         monthlyAmount: 0,
         futureValue: 0,
         years: 10,
-        returnRate: 0.07,
+        returnRate: this.adminSettings.marketReturnRate,
       };
     }
 
-    const monthly = monthlyAmount || topDiscretionary.amount;
-    const annualRate = 0.07;
+    // Apply simulation modifiers to the monthly amount
+    const baseMonthly = monthlyAmount || topDiscretionary.amount;
+    const modifiedMonthly = baseMonthly * this.adminSettings.expenseModifier;
+    
+    const annualRate = this.adminSettings.marketReturnRate;
     const years = 10;
     const months = years * 12;
     
     // Future value of monthly investment: FV = PMT * [((1 + r)^n - 1) / r]
     // where r = monthly rate, n = number of months
     const monthlyRate = annualRate / 12;
-    const futureValue = monthly * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+    const futureValue = modifiedMonthly * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
 
     return {
       category: topDiscretionary.name,
-      monthlyAmount: Math.round(monthly),
+      monthlyAmount: Math.round(modifiedMonthly),
       futureValue: Math.round(futureValue),
       years,
       returnRate: annualRate,
@@ -459,7 +482,7 @@ export class InsightsService {
 
     const needsTarget = income * 0.5;
     const wantsTarget = income * 0.3;
-    const savingsTarget = income * 0.2;
+    const savingsTarget = income * this.adminSettings.targetSavingsRate;
 
     const needsPercent = income > 0 ? (needsTotal / income) * 100 : 0;
     const wantsPercent = income > 0 ? (wantsTotal / income) * 100 : 0;

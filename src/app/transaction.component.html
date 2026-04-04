@@ -194,7 +194,7 @@
               </td>
               <td class="p-4 text-base font-semibold tabular-nums">
                 @if (tx.type === 'income') {
-                  <span class="text-emerald-600 dark:text-emerald-400">+{{ tx.amount | number : '1.2-2' }}</span>
+                  <span class="text-violet-600 dark:text-violet-400">+{{ tx.amount | number : '1.2-2' }}</span>
                 } @else {
                   <span class="text-rose-600 dark:text-rose-400">−{{ tx.amount | number : '1.2-2' }}</span>
                 }
@@ -202,9 +202,9 @@
               <td class="p-4">
                 <span
                   class="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide"
-                  [class.bg-emerald-500/15]="tx.type === 'income'"
-                  [class.text-emerald-700]="tx.type === 'income'"
-                  [class.dark:text-emerald-300]="tx.type === 'income'"
+                  [class.bg-violet-500/15]="tx.type === 'income'"
+                  [class.text-violet-700]="tx.type === 'income'"
+                  [class.dark:text-violet-300]="tx.type === 'income'"
                   [class.bg-rose-500/15]="tx.type === 'expense'"
                   [class.text-rose-700]="tx.type === 'expense'"
                   [class.dark:text-rose-300]="tx.type === 'expense'"

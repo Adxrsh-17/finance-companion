@@ -1,27 +1,80 @@
-<div class="max-w-7xl mx-auto pb-8 space-y-6">
-  <section class="insights-card tw-animate-fade-up rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Behavioral Intelligence</p>
-        <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">{{ greetingMessage }}</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Predictive analytics, behavioral personas, and your personal finance vitality score.</p>
+<!-- ========================================
+     INSIGHTS HERO HEADER
+     ======================================== -->
+<div class="insights-hero">
+
+  <!-- Decorative background orbs -->
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <!-- Content -->
+  <div class="hero-content">
+
+    <!-- Left: Greeting + meta -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Behavioral Intelligence Platform
       </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Period</span>
+
+      <h1 class="hero-title">{{ greetingMessage }}</h1>
+
+      <p class="hero-subtitle">
+        Predictive analytics, behavioral personas, and your personal finance vitality score.
+      </p>
+
+      <!-- Live ticker row -->
+      <div class="hero-ticker">
+        <span class="hero-ticker-badge">
+          <span class="ticker-pulse"></span> Live
+        </span>
+        <span class="hero-ticker-item">Health Score: <strong>{{ healthScore().score }}/100</strong></span>
+        <span class="hero-ticker-sep">·</span>
+        <span class="hero-ticker-item">Period: <strong>Last {{ selectedDays() }}D</strong></span>
+        <span class="hero-ticker-sep">·</span>
+        <span class="hero-ticker-item">Tier: <strong>{{ healthScore().tier }}</strong></span>
+      </div>
+    </div>
+
+    <!-- Right: Score ring -->
+    <div class="hero-right">
+      <div class="hero-score-ring">
+        <svg viewBox="0 0 100 100" class="hero-ring-svg">
+          <circle cx="50" cy="50" r="42" class="ring-track"/>
+          <circle cx="50" cy="50" r="42" class="ring-fill"
+                  [style.stroke-dashoffset]="264 - (264 * healthScore().score / 100)"/>
+        </svg>
+        <div class="ring-inner">
+          <div class="ring-score">{{ healthScore().score }}</div>
+          <div class="ring-label">/ 100</div>
+        </div>
+      </div>
+      <div class="hero-score-meta">
+        <div class="score-meta-label">Financial Health</div>
+        <div class="score-meta-tier"
+             [style]="healthScore().tier === 'Excellent' ? 'color: #a855f7;'
+                     : healthScore().tier === 'Good' ? 'color: #60a5fa;'
+                     : healthScore().tier === 'Fair' ? 'color: #f59e0b;'
+                     : 'color: #f87171;'">
+          {{ healthScore().tier }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Command Bar inside hero -->
+  <div class="hero-command-bar">
+    <div class="cmd-section">
+      <span class="cmd-label">Time Period</span>
+      <div class="cmd-pills">
         @for (days of periods; track days) {
           <button
             type="button"
             (click)="setPeriod(days)"
-            class="rounded-full px-3 py-1.5 text-xs font-semibold border transition"
-            [class.bg-cyan-600]="selectedDays() === days"
-            [class.text-white]="selectedDays() === days"
-            [class.border-cyan-600]="selectedDays() === days"
-            [class.bg-white]="selectedDays() !== days"
-            [class.dark:bg-slate-700]="selectedDays() !== days"
-            [class.text-slate-700]="selectedDays() !== days"
-            [class.dark:text-slate-200]="selectedDays() !== days"
-            [class.border-slate-200]="selectedDays() !== days"
-            [class.dark:border-slate-600]="selectedDays() !== days"
+            class="cmd-pill"
+            [class.active]="selectedDays() === days"
           >
             {{ days }}D
           </button>
@@ -29,213 +82,699 @@
       </div>
     </div>
 
+    <div class="cmd-divider"></div>
+
+    <div class="cmd-section">
+      <span class="cmd-label">Period</span>
+      <span class="cmd-value">Last {{ selectedDays() }} Days</span>
+    </div>
+
     @if (isAdmin) {
-      <div class="mt-4 rounded-2xl border border-cyan-200 dark:border-cyan-800 bg-cyan-50/70 dark:bg-cyan-950/30 p-4">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-300">Admin Controls</span>
-          <button type="button" (click)="refreshInsights()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">Refresh Signals</button>
-          <button type="button" (click)="exportInsightsSnapshot()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">Export Snapshot</button>
-          <button type="button" (click)="toggleAdvancedSignals()" class="rounded-lg bg-white dark:bg-slate-700 border border-cyan-200 dark:border-cyan-800 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-slate-600 transition">{{ showAdvancedSignals() ? 'Hide Advanced' : 'Show Advanced' }}</button>
+      <div class="cmd-divider"></div>
+      <div class="cmd-section" style="z-index: 2; position: relative;">
+        <span class="cmd-label">Admin Controls</span>
+        <div class="cmd-pills">
+          <button type="button" (click)="refreshInsights()" class="cmd-pill">🔄 Refresh</button>
+          <button type="button" (click)="exportInsightsSnapshot()" class="cmd-pill">📸 Snapshot</button>
+          <button type="button" (click)="toggleAdvancedSignals()" class="cmd-pill">
+            {{ showAdvancedSignals() ? '🙈 Hide Advanced' : '🔬 Advanced' }}
+          </button>
         </div>
-        @if (adminActionMessage()) {
-          <p class="mt-2 text-xs text-cyan-700 dark:text-cyan-300">{{ adminActionMessage() }}</p>
-        }
       </div>
     }
-  </section>
 
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Net Saved</p>
-      <p class="mt-2 text-4xl font-black text-slate-900 dark:text-white">{{ stats().saved | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ formatPct(stats().savedDelta) }} vs previous period</p>
+    <div style="margin-left: auto; z-index: 2; position: relative; display: flex; align-items: center; gap: 8px;">
+      <span class="w-2 h-2 rounded-full animate-pulse" style="background: #a855f7; display:inline-block;"></span>
+      <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;">Live Analysis</span>
     </div>
+  </div>
 
-    <div class="insights-card insights-card--violet tw-animate-fade-up tw-delay-100 rounded-3xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-violet-500 to-indigo-500 dark:from-violet-600 dark:to-indigo-600 p-6 text-white shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <p class="text-xs uppercase tracking-wider text-violet-100 dark:text-violet-200">Savings Rate</p>
-      <p class="mt-2 text-4xl font-black">{{ stats().savingsRate }}%</p>
-      <p class="mt-2 text-sm text-violet-100 dark:text-violet-200">Target: 20% | Latest selected period.</p>
-    </div>
+</div>
 
-    <div class="insights-card tw-animate-fade-up tw-delay-140 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20 flex items-center justify-center">
-      <div class="aspect-square w-44 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 text-white flex flex-col items-center justify-center shadow-xl shadow-cyan-500/25 dark:shadow-cyan-500/15">
-        <p class="text-[11px] uppercase tracking-[0.14em]">Health Score</p>
-        <p class="mt-1 text-5xl font-black">{{ healthScore().score }}</p>
-        <p class="mt-1 text-sm font-semibold">{{ healthScore().tier }}</p>
-      </div>
-    </div>
-  </section>
+<div class="p-6 space-y-6">
 
-  @if (showAdvancedSignals()) {
-    <section class="insights-card tw-animate-fade-up rounded-3xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/30 p-5">
-      <h2 class="text-lg font-bold text-indigo-900 dark:text-indigo-200">Advanced Signal Snapshot</h2>
-      <p class="mt-1 text-sm text-indigo-800 dark:text-indigo-300">Biggest Day: {{ stats().biggestDay?.[1] !== undefined ? (stats().biggestDay?.[1] | currency : 'USD' : 'symbol' : '1.0-0') : 'No data' }}</p>
-      <p class="text-sm text-indigo-800 dark:text-indigo-300">Average Daily Spend: {{ stats().avgDaily | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
-    </section>
-  }
+  <!-- ===== ADMIN CONTROL CENTER (admin only) ===== -->
+  @if (isAdmin) {
 
-  <!-- Future Wealth Section -->
-  @if (opportunityCost().monthlyAmount > 0) {
-    <section class="tw-animate-fade-up">
-      <div class="rounded-3xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800 dark:to-slate-900/50 p-8 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20 overflow-hidden relative">
-        <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-emerald-300/20 dark:from-emerald-500/10 to-cyan-300/20 dark:to-cyan-500/10 blur-3xl"></div>
-        <div class="relative z-10">
-          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div>
-              <p class="text-xs font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2">Future Wealth Projection</p>
-              <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Opportunity Cost Calculator</h3>
-              <p class="text-sm text-slate-700 dark:text-slate-300 mb-6 max-w-md">
-                You're spending <span class="font-semibold text-slate-900 dark:text-white">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}/month</span> on <span class="font-semibold">{{ opportunityCost().category }}</span>. 
-                If invested at <span class="font-semibold">{{ (opportunityCost().returnRate * 100) | number:'1.0-0' }}%</span> annual returns, this could grow to:
-              </p>
-              <div class="mt-4 p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <p class="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">10-Year Projected Value</p>
-                <p class="text-5xl font-black bg-gradient-to-r from-emerald-500 via-cyan-500 to-green-500 dark:from-emerald-400 dark:via-cyan-400 dark:to-green-400 bg-clip-text text-transparent">
-                  {{ opportunityCost().futureValue | currency:'USD':'symbol':'1.0-0' }}
-                </p>
-                <p class="mt-2 text-xs text-slate-600 dark:text-slate-400">That's <span class="font-semibold">{{ (opportunityCost().futureValue - (opportunityCost().monthlyAmount * 120)) | currency:'USD':'symbol':'1.0-0' }}</span> in pure compound growth</p>
-              </div>
-            </div>
-            <div class="flex-shrink-0 w-full lg:w-auto">
-              <div class="aspect-square w-full lg:w-64 rounded-2xl bg-gradient-to-br from-emerald-400 via-cyan-400 to-green-500 dark:from-emerald-500 dark:via-cyan-500 dark:to-green-600 flex items-center justify-center shadow-xl shadow-cyan-500/30 dark:shadow-cyan-500/15 relative group">
-                <div class="text-center">
-                  <p class="text-sm font-semibold text-white/80 uppercase tracking-wider">Invested Monthly</p>
-                  <p class="mt-2 text-4xl font-black text-white">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}</p>
-                  <div class="mt-4 h-1 w-24 mx-auto rounded-full bg-white/40"></div>
-                  <p class="mt-4 text-xs font-semibold text-white/90 uppercase">Becomes</p>
-                  <p class="mt-1 text-2xl font-black text-white">{{ opportunityCost().futureValue | currency:'USD':'symbol':'1.0-0' }}</p>
-                </div>
-                <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/10 to-transparent"></div>
-              </div>
-            </div>
+    <!-- ── Header Bar ── -->
+    <div class="stat-card" style="padding: 28px 32px;">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+               style="background: linear-gradient(135deg, #7c3aed, #5b21b6); box-shadow: 0 8px 24px -6px rgba(124,58,237,0.5);">
+            <span style="font-size: 24px;">🛡️</span>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-[0.2em] mb-1" style="color: var(--text-muted);">Zorvyn Intelligence Platform</div>
+            <div class="text-xl font-bold" style="color: var(--text-primary);">Admin Control Center</div>
+            <div class="text-sm mt-1" style="color: var(--text-muted);">Privileged operational access — full signal & data authority</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- System status -->
+          <div class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold"
+               [style]="systemHealthStatus() === 'healthy'
+                 ? 'background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); color: #10b981;'
+                 : systemHealthStatus() === 'checking'
+                 ? 'background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.35); color: #f59e0b;'
+                 : 'background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #ef4444;'">
+            <span class="w-2.5 h-2.5 rounded-full animate-pulse"
+                  [style]="systemHealthStatus() === 'healthy' ? 'background:#10b981'
+                          : systemHealthStatus() === 'checking' ? 'background:#f59e0b'
+                          : 'background:#ef4444'"></span>
+            {{ systemHealthStatus() === 'healthy' ? 'System Healthy'
+               : systemHealthStatus() === 'checking' ? 'Checking...'
+               : 'Degraded' }}
           </div>
         </div>
       </div>
-    </section>
+    </div>
+
+    <!-- ── Live Status Row ── -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+
+      <div class="stat-card text-center" style="padding: 18px 16px;">
+        <div class="text-2xl mb-2">🔍</div>
+        <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Anomaly Detect</div>
+        <div class="text-sm font-bold"
+             [style]="anomalyDetectionActive() ? 'color: #a855f7;' : 'color: var(--text-muted);'">
+          {{ anomalyDetectionActive() ? '● ON' : '○ OFF' }}
+        </div>
+      </div>
+
+      <div class="stat-card text-center" style="padding: 18px 16px;">
+        <div class="text-2xl mb-2">📊</div>
+        <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Benchmarks</div>
+        <div class="text-sm font-bold"
+             [style]="benchmarkModeActive() ? 'color: #60a5fa;' : 'color: var(--text-muted);'">
+          {{ benchmarkModeActive() ? '● Active' : '○ Inactive' }}
+        </div>
+      </div>
+
+      <div class="stat-card text-center" style="padding: 18px 16px;">
+        <div class="text-2xl mb-2">🔒</div>
+        <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Period Lock</div>
+        <div class="text-sm font-bold"
+             [style]="periodFrozen() ? 'color: #f87171;' : 'color: var(--text-muted);'">
+          {{ periodFrozen() ? '● FROZEN' : '○ Live' }}
+        </div>
+      </div>
+
+      <div class="stat-card text-center" style="padding: 18px 16px;">
+        <div class="text-2xl mb-2">🔔</div>
+        <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Alert Rules</div>
+        <div class="text-sm font-bold" style="color: var(--text-primary);">{{ alertsConfigured() }} Active</div>
+      </div>
+
+      <div class="stat-card text-center" style="padding: 18px 16px;">
+        <div class="text-2xl mb-2">🎯</div>
+        <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color: var(--text-muted);">Budget Alert</div>
+        <div class="text-sm font-bold" style="color: #a855f7;">{{ budgetThreshold() }}%</div>
+      </div>
+
+    </div>
+
+    <!-- ── Control Panels Row 1 ── -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Analysis & Intelligence -->
+      <div class="stat-card" style="padding: 28px;">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+            <span class="text-white">🔬</span>
+          </div>
+          <div>
+            <div class="text-sm font-bold" style="color: var(--text-primary);">Analysis & Intelligence</div>
+            <div class="text-xs" style="color: var(--text-muted);">Signal processing and anomaly detection</div>
+          </div>
+        </div>
+        <div class="space-y-3">
+
+          <button (click)="runDeepAnalysis()" [disabled]="deepAnalysisRunning()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">⚙️</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">{{ deepAnalysisRunning() ? 'Running Deep Analysis...' : 'Run Deep Analysis' }}</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Recalculate all behavioral signals</div>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full" style="background: rgba(139,92,246,0.15); color: #a855f7;">{{ deepAnalysisRunning() ? '⏳' : '▶' }}</span>
+          </button>
+
+          <button (click)="toggleAnomalyDetection()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  [style]="anomalyDetectionActive()
+                    ? 'background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.4); padding: 14px 18px;'
+                    : 'background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;'">
+            <span style="font-size: 22px;">🔍</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" [style]="anomalyDetectionActive() ? 'color: #a855f7;' : 'color: var(--text-primary);'">
+                {{ anomalyDetectionActive() ? 'Disable Anomaly Detection' : 'Enable Anomaly Detection' }}
+              </div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Flag unusual spending patterns automatically</div>
+            </div>
+            <span class="text-xs font-bold px-2 py-1 rounded-full"
+                  [style]="anomalyDetectionActive() ? 'background: rgba(139,92,246,0.2); color: #a855f7;' : 'background: rgba(255,255,255,0.05); color: var(--text-muted);'">
+              {{ anomalyDetectionActive() ? 'ON' : 'OFF' }}
+            </span>
+          </button>
+
+          <button (click)="toggleBenchmarkMode()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  [style]="benchmarkModeActive()
+                    ? 'background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.35); padding: 14px 18px;'
+                    : 'background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;'">
+            <span style="font-size: 22px;">📊</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" [style]="benchmarkModeActive() ? 'color: #60a5fa;' : 'color: var(--text-primary);'">
+                {{ benchmarkModeActive() ? 'Disable Benchmarks' : 'Enable Benchmark Mode' }}
+              </div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Compare against industry financial averages</div>
+            </div>
+            <span class="text-xs font-bold px-2 py-1 rounded-full"
+                  [style]="benchmarkModeActive() ? 'background: rgba(59,130,246,0.15); color: #60a5fa;' : 'background: rgba(255,255,255,0.05); color: var(--text-muted);'">
+              {{ benchmarkModeActive() ? 'ON' : 'OFF' }}
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Data & Reporting -->
+      <div class="stat-card" style="padding: 28px;">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <span class="text-white">📁</span>
+          </div>
+          <div>
+            <div class="text-sm font-bold" style="color: var(--text-primary);">Data & Reporting</div>
+            <div class="text-xs" style="color: var(--text-muted);">Export, snapshot, and pipeline management</div>
+          </div>
+        </div>
+        <div class="space-y-3">
+
+          <button (click)="generateFullReport()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">📄</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Export Full Report</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Complete JSON with all signals, health & analytics</div>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full" style="background: rgba(139,92,246,0.15); color: #a855f7;">↓</span>
+          </button>
+
+          <button (click)="exportInsightsSnapshot()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">📸</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Export Insights Snapshot</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Point-in-time insights data for auditing</div>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full" style="background: rgba(139,92,246,0.15); color: #a855f7;">↓</span>
+          </button>
+
+          <button (click)="refreshInsights()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">🔄</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Refresh Signal Feed</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Pull latest transactions and re-run all models</div>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full" style="background: rgba(139,92,246,0.15); color: #a855f7;">↺</span>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Control Panels Row 2 ── -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Configuration -->
+      <div class="stat-card" style="padding: 28px;">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <span class="text-white">⚙️</span>
+          </div>
+          <div>
+            <div class="text-sm font-bold" style="color: var(--text-primary);">Configuration</div>
+            <div class="text-xs" style="color: var(--text-muted);">Period control, alerts and signal toggles</div>
+          </div>
+        </div>
+        <div class="space-y-3">
+
+          <button (click)="togglePeriodFreeze()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  [style]="periodFrozen()
+                    ? 'background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.35); padding: 14px 18px;'
+                    : 'background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;'">
+            <span style="font-size: 22px;">🔒</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" [style]="periodFrozen() ? 'color: #f87171;' : 'color: var(--text-primary);'">
+                {{ periodFrozen() ? 'Unfreeze Data Period' : 'Freeze Data Period' }}
+              </div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Lock current {{ selectedDays() }}-day window from live updates</div>
+            </div>
+            <span class="text-xs font-bold px-2 py-1 rounded-full"
+                  [style]="periodFrozen() ? 'background: rgba(239,68,68,0.15); color: #f87171;' : 'background: rgba(255,255,255,0.05); color: var(--text-muted);'">
+              {{ periodFrozen() ? 'FROZEN' : 'LIVE' }}
+            </span>
+          </button>
+
+          <button (click)="configureAlerts()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">🔔</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Cycle Alert Sensitivity</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Currently {{ alertsConfigured() }} rule(s) active — click to cycle</div>
+            </div>
+            <span class="text-sm font-bold px-3 py-1 rounded-full" style="background: rgba(139,92,246,0.15); color: #a855f7;">{{ alertsConfigured() }}</span>
+          </button>
+
+          <button (click)="toggleAdvancedSignals()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  [style]="showAdvancedSignals()
+                    ? 'background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.4); padding: 14px 18px;'
+                    : 'background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;'">
+            <span style="font-size: 22px;">🔬</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" [style]="showAdvancedSignals() ? 'color: #a855f7;' : 'color: var(--text-primary);'">
+                {{ showAdvancedSignals() ? 'Hide Advanced Signals' : 'Show Advanced Signals' }}
+              </div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Raw analytics snapshot panel for debugging</div>
+            </div>
+            <span class="text-xs font-bold px-2 py-1 rounded-full"
+                  [style]="showAdvancedSignals() ? 'background: rgba(139,92,246,0.2); color: #a855f7;' : 'background: rgba(255,255,255,0.05); color: var(--text-muted);'">
+              {{ showAdvancedSignals() ? 'ON' : 'OFF' }}
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- System & Audit -->
+      <div class="stat-card" style="padding: 28px;">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <span class="text-white">🏥</span>
+          </div>
+          <div>
+            <div class="text-sm font-bold" style="color: var(--text-primary);">System & Audit</div>
+            <div class="text-xs" style="color: var(--text-muted);">Health checks, budget controls, and logs</div>
+          </div>
+        </div>
+        <div class="space-y-3">
+
+          <button (click)="runSystemHealthCheck()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">🏥</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Run System Health Check</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Verify all data pipelines and signal stability</div>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full" style="background: rgba(16,185,129,0.12); color: #10b981;">Run</span>
+          </button>
+
+          <!-- Budget Threshold stepper -->
+          <div class="flex items-center gap-4 rounded-xl" style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">🎯</span>
+            <div class="flex-1">
+              <div class="text-sm font-semibold" style="color: var(--text-primary);">Budget Alert Threshold</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Alert fires when spend exceeds {{ budgetThreshold() }}% of budget</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button (click)="lowerBudgetThreshold()"
+                      class="w-8 h-8 rounded-lg text-sm font-bold cursor-pointer flex items-center justify-center"
+                      style="background: rgba(139,92,246,0.2); color: white; border: 1px solid rgba(139,92,246,0.3);">−</button>
+              <span class="text-base font-bold w-12 text-center" style="color: #a855f7;">{{ budgetThreshold() }}%</span>
+              <button (click)="raiseBudgetThreshold()"
+                      class="w-8 h-8 rounded-lg text-sm font-bold cursor-pointer flex items-center justify-center"
+                      style="background: rgba(139,92,246,0.2); color: white; border: 1px solid rgba(139,92,246,0.3);">+</button>
+            </div>
+          </div>
+
+          <button (click)="clearAuditLog()"
+                  class="w-full flex items-center gap-4 rounded-xl transition-all duration-200 cursor-pointer"
+                  style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18); padding: 14px 18px;">
+            <span style="font-size: 22px;">🗑️</span>
+            <div class="text-left flex-1">
+              <div class="text-sm font-semibold" style="color: #f87171;">Clear Audit Log</div>
+              <div class="text-xs mt-0.5" style="color: var(--text-muted);">Remove all {{ auditLog().length }} recorded admin actions</div>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Action Feedback + Audit Log ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- Action Feedback Terminal -->
+      <div class="stat-card" style="padding: 24px;">
+        <div class="text-xs font-bold uppercase tracking-[0.2em] mb-3" style="color: var(--text-muted);">Last Action</div>
+        @if (adminActionMessage()) {
+          <div class="flex items-start gap-3 p-4 rounded-xl" style="background: rgba(139,92,246,0.07); border: 1px solid rgba(139,92,246,0.18);">
+            <div class="w-2 h-2 rounded-full mt-1 flex-shrink-0 animate-pulse" style="background: #a855f7;"></div>
+            <span class="text-sm font-medium leading-relaxed" style="color: var(--text-primary);">{{ adminActionMessage() }}</span>
+          </div>
+        } @else {
+          <div class="p-4 rounded-xl text-center" style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1);">
+            <span class="text-sm" style="color: var(--text-muted);">No action taken yet</span>
+          </div>
+        }
+      </div>
+
+      <!-- Audit Log -->
+      <div class="stat-card" style="padding: 24px;">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-xs font-bold uppercase tracking-[0.2em]" style="color: var(--text-muted);">📋 Audit Trail</div>
+          <span class="text-xs px-2 py-0.5 rounded-full" style="background: rgba(139,92,246,0.12); color: #a855f7;">{{ auditLog().length }} events</span>
+        </div>
+        @if (auditLog().length > 0) {
+          <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+            @for (entry of auditLog(); track entry.time + entry.action) {
+              <div class="flex items-center justify-between py-2 px-3 rounded-lg" style="background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.1);">
+                <span class="text-xs font-medium" style="color: var(--text-primary);">{{ entry.action }}</span>
+                <span class="text-xs flex-shrink-0 ml-3" style="color: var(--text-muted);">{{ entry.time }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="p-4 rounded-xl text-center" style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1);">
+            <span class="text-sm" style="color: var(--text-muted);">Audit log is empty</span>
+          </div>
+        }
+      </div>
+
+    </div>
+
   }
 
-  <section class="grid grid-cols-1 xl:grid-cols-3 gap-4">
-    <article class="insights-card tw-animate-fade-up xl:col-span-2 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Financial Signal Feed</h2>
+  <!-- ===== STAT SUMMARY ROW ===== -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+    <!-- Net Saved -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #10b981, #059669);">
+          <span class="text-white text-lg">💰</span>
+        </div>
+        <span class="text-xs uppercase tracking-widest" style="color: var(--text-muted);">Net Saved</span>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+        {{ stats().saved | currency : 'USD' : 'symbol' : '1.0-0' }}
+      </div>
+      <p style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;">
+        {{ formatPct(stats().savedDelta) }} vs previous period
+      </p>
+    </div>
+
+    <!-- Savings Rate -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+          <span class="text-white text-lg">💰</span>
+        </div>
+        <span class="text-xs uppercase tracking-widest" style="color: var(--text-muted);">Savings Rate</span>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+        {{ stats().savingsRate }}%
+      </div>
+      <p style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;">Target: 20% | Latest selected period.</p>
+    </div>
+
+    <!-- Daily Average -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+          <span class="text-white text-lg">📅</span>
+        </div>
+        <span class="text-xs uppercase tracking-widest" style="color: var(--text-muted);">Daily Average</span>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+        {{ stats().avgDaily | currency : 'USD' : 'symbol' : '1.0-0' }}
+      </div>
+      <p style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;">Per day this period</p>
+    </div>
+
+    <!-- Health Score -->
+    <div class="stat-card relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style="background: radial-gradient(circle, #8b5cf6, transparent);"></div>
+      <div class="relative z-10">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <span class="text-white text-xl">📊</span>
+          </div>
+          <div class="text-right">
+            <div class="text-xs font-medium" style="color: var(--text-muted);">Score</div>
+            <div class="text-xs" style="color: var(--text-muted);">Financial Wellness</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="flex items-baseline gap-2">
+            <span style="font-size: 32px; font-weight: 800; color: var(--text-primary);">{{ healthScore().score }}</span>
+            <span style="font-size: 16px; font-weight: 600; color: var(--text-muted);">/100</span>
+          </div>
+          <div class="mt-2 h-2 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.1);">
+            <div class="h-full rounded-full transition-all duration-1000"
+                 [style]="'width: ' + healthScore().score + '%; background: linear-gradient(90deg, #8b5cf6, #a855f7);'"></div>
+          </div>
+        </div>
+        <span class="text-xs font-medium px-2 py-1 rounded-full" style="background: rgba(139, 92, 246, 0.1); color: #a855f7;">
+          {{ healthScore().tier }} | Financial wellness
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADVANCED SIGNALS (admin only) ===== -->
+  @if (showAdvancedSignals()) {
+    <div class="stat-card mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+          <span class="text-white text-lg">🔬</span>
+        </div>
+        <div>
+          <div class="text-sm font-semibold" style="color: var(--text-primary);">Advanced Signal Snapshot</div>
+          <div class="text-xs" style="color: var(--text-muted);">Raw analytics data</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center p-3 rounded-lg" style="background: rgba(124,58,237,0.05);">
+          <div class="text-lg font-bold" style="color: var(--text-primary);">
+            {{ stats().biggestDay?.[1] !== undefined ? (stats().biggestDay?.[1] | currency : 'USD' : 'symbol' : '1.0-0') : 'No data' }}
+          </div>
+          <div class="text-xs" style="color: var(--text-muted);">Biggest Day</div>
+        </div>
+        <div class="text-center p-3 rounded-lg" style="background: rgba(124,58,237,0.05);">
+          <div class="text-lg font-bold" style="color: var(--text-primary);">
+            {{ stats().avgDaily | currency : 'USD' : 'symbol' : '1.0-0' }}
+          </div>
+          <div class="text-xs" style="color: var(--text-muted);">Avg Daily Spend</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ===== FUTURE WEALTH PROJECTION ===== -->
+  @if (opportunityCost().monthlyAmount > 0) {
+    <div class="stat-card mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+          <span class="text-white text-xl">🚀</span>
+        </div>
+        <div class="flex-1">
+          <div class="text-xs font-semibold uppercase tracking-widest" style="color: var(--text-muted);">Future Wealth Projection</div>
+          <div class="text-lg font-semibold" style="color: var(--text-primary);">Opportunity Cost Calculator</div>
+        </div>
+      </div>
+      <p class="text-sm mb-6 max-w-2xl" style="color: var(--text-muted);">
+        You're spending <span class="font-semibold" style="color: var(--text-primary);">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}/month</span>
+        on <span class="font-semibold" style="color: var(--text-primary);">{{ opportunityCost().category }}</span>.
+        If invested at <span class="font-semibold" style="color: var(--text-primary);">{{ (opportunityCost().returnRate * 100) | number:'1.0-0' }}%</span> annual returns, this could grow to:
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center p-3 rounded-lg" style="background: rgba(124,58,237,0.05);">
+          <div class="text-2xl font-bold" style="color: var(--text-primary);">{{ opportunityCost().monthlyAmount | currency:'USD':'symbol':'1.0-0' }}</div>
+          <div class="text-xs" style="color: var(--text-muted);">Monthly Investment</div>
+        </div>
+        <div class="text-center p-3 rounded-lg" style="background: rgba(124,58,237,0.05);">
+          <div class="text-2xl font-bold" style="color: var(--text-primary);">{{ (opportunityCost().returnRate * 100) | number:'1.0-0' }}%</div>
+          <div class="text-xs" style="color: var(--text-muted);">Annual Return</div>
+        </div>
+        <div class="text-center p-3 rounded-lg" style="background: rgba(124,58,237,0.05);">
+          <div class="text-2xl font-bold" style="color: var(--text-primary);">{{ opportunityCost().years }}Y</div>
+          <div class="text-xs" style="color: var(--text-muted);">Time Horizon</div>
+        </div>
+        <div class="text-center p-3 rounded-lg" style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139,92,246,0.3);">
+          <div class="text-2xl font-bold" style="color: var(--text-primary);">{{ opportunityCost().futureValue | currency:'USD':'symbol':'1.0-0' }}</div>
+          <div class="text-xs" style="color: var(--text-muted);">10-Year Value</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ===== SIGNAL FEED + ACTIONS ROW ===== -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+
+    <!-- Financial Signal Feed -->
+    <div class="lg:col-span-2 stat-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-3 h-3 rounded-full animate-pulse" style="background: linear-gradient(135deg, #06b6d4, #7c3aed);"></div>
+        <h2 class="text-lg font-bold" style="color: var(--text-primary);">Financial Signal Feed</h2>
+        <span class="text-xs font-medium" style="color: var(--text-muted);">Live Analysis</span>
+      </div>
       <div class="space-y-3">
         @for (story of stories(); track story.title + story.icon) {
-          <div class="insights-story-card rounded-2xl border p-4" [class]="getStoryTypeClasses(story.type)">
-            <div class="flex items-start gap-3">
-              <div class="h-10 w-10 rounded-full flex items-center justify-center text-lg" [style.background-color]="story.iconBg">{{ story.icon }}</div>
-              <div>
-                <h3 class="font-semibold text-slate-900 dark:text-white">{{ story.title }}</h3>
-                <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{{ story.body }}</p>
-              </div>
+          <div class="flex items-start gap-3 p-3 rounded-xl" style="background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.1);">
+            <div class="h-10 w-10 rounded-full flex items-center justify-center text-lg flex-shrink-0" [style.background-color]="story.iconBg">{{ story.icon }}</div>
+            <div>
+              <h3 class="font-semibold text-sm" style="color: var(--text-primary);">{{ story.title }}</h3>
+              <p class="mt-1 text-xs leading-relaxed" style="color: var(--text-muted);">{{ story.body }}</p>
             </div>
           </div>
         }
       </div>
-    </article>
+    </div>
 
-    <article class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Prescriptive Actions</h2>
+    <!-- Prescriptive Actions -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #a855f7, #9333ea);">
+          <span class="text-white text-lg">💡</span>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold" style="color: var(--text-primary);">Prescriptive Actions</h2>
+          <div class="text-xs" style="color: var(--text-muted);">Smart recommendations</div>
+        </div>
+      </div>
       <div class="space-y-3">
         @if (smartActions().length > 0) {
           @for (action of smartActions(); track action.title) {
-            <div class="rounded-2xl border border-violet-300 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/30 p-4 transition">
-              <div class="flex items-start gap-3">
-                <div class="text-2xl">{{ action.icon }}</div>
-                <div class="flex-1">
-                  <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ action.title }}</p>
-                  <p class="mt-1 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{{ action.body }}</p>
-                  @if (action.impact) {
-                    <p class="mt-2 text-xs font-semibold px-2 py-1 rounded inline-block bg-violet-200 dark:bg-violet-800 text-violet-800 dark:text-violet-200">
-                      💡 {{ action.impact }}
-                    </p>
-                  }
-                </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl" style="background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.1);">
+              <div class="text-2xl flex-shrink-0">{{ action.icon }}</div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold" style="color: var(--text-primary);">{{ action.title }}</p>
+                <p class="mt-1 text-xs leading-relaxed" style="color: var(--text-muted);">{{ action.body }}</p>
+                @if (action.impact) {
+                  <p class="mt-2 text-xs font-semibold px-2 py-1 rounded inline-block" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    💡 {{ action.impact }}
+                  </p>
+                }
               </div>
             </div>
           }
         } @else {
-          <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4 text-center">
-            <p class="text-sm text-slate-600 dark:text-slate-400">No actions needed. You're on track!</p>
-          </div>
+          <p class="text-sm text-center py-4" style="color: var(--text-muted);">No actions needed. You're on track! 🎉</p>
         }
       </div>
-    </article>
-  </section>
+    </div>
+  </div>
 
-  <section class="grid grid-cols-1 xl:grid-cols-3 gap-4">
-    <article class="insights-card tw-animate-fade-up tw-delay-60 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">50/30/20 Budget</h2>
+  <!-- ===== BUDGET + BREAKDOWN + CHART ROW ===== -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+    <!-- 50/30/20 Budget -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+          <span class="text-white text-lg">🎯</span>
+        </div>
+        <div>
+          <div class="text-sm font-semibold" style="color: var(--text-primary);">50/30/20 Budget</div>
+          <div class="text-xs" style="color: var(--text-muted);">Budget deviation analysis</div>
+        </div>
+      </div>
       <div class="space-y-4">
         <!-- Needs -->
         <div>
           <div class="flex items-center justify-between mb-2">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Needs (50% target)</p>
-            <p class="text-xs font-bold" [class]="budgetDeviation().needsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color: var(--text-muted);">Needs (50% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().needsDeviation >= 0 ? 'text-violet-600' : 'text-rose-600'">
               {{ budgetDeviation().needsPercent }}%
             </p>
           </div>
-          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-          <div class="h-2 rounded-full bg-violet-500 dark:bg-violet-600 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().needsPercent)"></div>
+          <div class="h-2 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.1);">
+            <div class="h-2 rounded-full progress-bar" [style]="'width: ' + Math.min(100, budgetDeviation().needsPercent) + '%; background: linear-gradient(90deg, #8b5cf6, #a855f7);'"></div>
           </div>
-          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().needsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
+          <p class="mt-1 text-xs" style="color: var(--text-muted);">{{ budgetDeviation().needsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
         </div>
-
         <!-- Wants -->
         <div>
           <div class="flex items-center justify-between mb-2">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Wants (30% target)</p>
-            <p class="text-xs font-bold" [class]="budgetDeviation().wantsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color: var(--text-muted);">Wants (30% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().wantsDeviation >= 0 ? 'text-violet-600' : 'text-rose-600'">
               {{ budgetDeviation().wantsPercent }}%
             </p>
           </div>
-          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-          <div class="h-2 rounded-full bg-violet-400 dark:bg-violet-500 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().wantsPercent)"></div>
+          <div class="h-2 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.1);">
+            <div class="h-2 rounded-full progress-bar" [style]="'width: ' + Math.min(100, budgetDeviation().wantsPercent) + '%; background: linear-gradient(90deg, #8b5cf6, #a855f7);'"></div>
           </div>
-          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().wantsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
+          <p class="mt-1 text-xs" style="color: var(--text-muted);">{{ budgetDeviation().wantsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
         </div>
-
         <!-- Savings -->
         <div>
           <div class="flex items-center justify-between mb-2">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">Savings (20% target)</p>
-            <p class="text-xs font-bold" [class]="budgetDeviation().savingsDeviation >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color: var(--text-muted);">Savings (20% target)</p>
+            <p class="text-xs font-bold" [class]="budgetDeviation().savingsDeviation >= 0 ? 'text-violet-600' : 'text-rose-600'">
               {{ budgetDeviation().savingsPercent }}%
             </p>
           </div>
-          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-          <div class="h-2 rounded-full bg-violet-600 dark:bg-violet-700 transition-all duration-500" [style.width.%]="Math.min(100, budgetDeviation().savingsPercent)"></div>
+          <div class="h-2 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.1);">
+            <div class="h-2 rounded-full progress-bar" [style]="'width: ' + Math.min(100, budgetDeviation().savingsPercent) + '%; background: linear-gradient(90deg, #8b5cf6, #a855f7);'"></div>
           </div>
-          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ budgetDeviation().savingsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
+          <p class="mt-1 text-xs" style="color: var(--text-muted);">{{ budgetDeviation().savingsActual | currency:'USD':'symbol':'1.0-0' }} actual</p>
         </div>
       </div>
-    </article>
-  </section>
+    </div>
 
-  <section class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-    <article class="insights-card tw-animate-fade-up rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Spending by Category</h2>
+    <!-- Spending by Category -->
+    <div class="stat-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+          <span class="text-white text-lg">📂</span>
+        </div>
+        <div>
+          <div class="text-sm font-semibold" style="color: var(--text-primary);">Spending by Category</div>
+          <div class="text-xs" style="color: var(--text-muted);">Expense mix breakdown</div>
+        </div>
+      </div>
       <div class="space-y-3">
         @for (cat of breakdown(); track cat.name) {
-          <div class="flex items-center gap-3">
-            <div class="h-2.5 w-2.5 rounded-full" [style.background-color]="cat.color"></div>
+          <div class="flex items-center gap-3" style="border-bottom: 1px solid var(--border-card); padding-bottom: 8px;">
+            <div class="h-2.5 w-2.5 rounded-full flex-shrink-0" [style.background-color]="cat.color"></div>
             <div class="flex-1">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-slate-700 dark:text-slate-300">{{ cat.name }}</span>
-                <span class="font-semibold text-slate-900 dark:text-white">{{ cat.amount | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
+                <span style="color: var(--text-muted);">{{ cat.name }}</span>
+                <span class="font-semibold" style="color: var(--text-primary);">{{ cat.amount | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
               </div>
-              <div class="mt-1 h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-                <div class="h-full rounded-full" [style.width.%]="cat.percent" [style.background-color]="cat.color"></div>
+              <div class="mt-1 h-1.5 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.1);">
+                <div class="h-full rounded-full progress-bar" [style]="'width: ' + cat.percent + '%; background-color: ' + cat.color"></div>
               </div>
             </div>
+            <span class="text-xs" style="color: var(--text-muted);">{{ cat.percent }}%</span>
           </div>
         }
       </div>
-    </article>
+    </div>
 
-    <article class="insights-card tw-animate-fade-up tw-delay-100 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-xl shadow-slate-900/5 dark:shadow-slate-900/20">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">6-Month Income vs Expense Curve</h2>
-      <div class="h-72">
+    <!-- 6-Month Chart -->
+    <div class="stat-card">
+      <p class="text-xs uppercase tracking-widest mb-1" style="color: var(--text-muted);">6-Month Trend</p>
+      <p class="text-sm mb-4" style="color: var(--text-muted);">Income vs Expense curve</p>
+      <div class="h-72" style="position: relative;">
         <canvas #monthlyTrendChart></canvas>
       </div>
-    </article>
-  </section>
+    </div>
+
+  </div>
+
 </div>

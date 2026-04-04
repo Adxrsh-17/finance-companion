@@ -1,26 +1,58 @@
-<!-- Dashboard Command Bar -->
-<div class="command-bar">
-  <!-- Left: time period filters -->
-  <div class="cmd-section">
-    <span class="cmd-label">Time Period</span>
-    <div class="cmd-pills">
-      <button *ngFor="let p of timePeriods"
-              class="cmd-pill"
-              [class.active]="selectedPeriod() === p.value"
-              (click)="onTimePeriodChange(p.value)">
-        {{ p.label }}
-      </button>
+<!-- Dashboard Hero Header -->
+<div class="dashboard-hero">
+  <!-- Orbs -->
+  <div class="dash-orb dash-orb-1"></div>
+  <div class="dash-orb dash-orb-2"></div>
+
+  <!-- Hero Content Row -->
+  <div class="dash-hero-content">
+    <div class="dash-hero-left">
+      <div class="dash-eyebrow">
+        <span class="dash-eyebrow-dot"></span>
+        Financial Dashboard · Zorvyn
+      </div>
+      <h1 class="dash-hero-title">Financial Insights</h1>
+      <p class="dash-hero-sub">Your complete financial picture, income, expenses, and trends — all in one place.</p>
+    </div>
+    <div class="dash-hero-right">
+      <div class="dash-date-badge">
+        <span class="dash-date-icon">📅</span>
+        <div>
+          <div class="dash-date-label">Reporting Period</div>
+          <div class="dash-date-value">{{ dateRangeLabel }}</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="cmd-divider"></div>
+  <!-- Filter Bar -->
+  <div class="dash-filter-bar">
+    <div class="cmd-section">
+      <span class="cmd-label">Time Period</span>
+      <div class="cmd-pills">
+        <button *ngFor="let p of timePeriods"
+                class="cmd-pill"
+                [class.active]="selectedPeriod() === p.value"
+                (click)="onTimePeriodChange(p.value)">
+          {{ p.label }}
+        </button>
+      </div>
+    </div>
 
-  <!-- Right: date range display -->
-  <div class="cmd-section">
-    <span class="cmd-label">Range</span>
-    <span class="cmd-value">{{ dateRangeLabel }}</span>
+    <div class="cmd-divider"></div>
+
+    <div class="cmd-section">
+      <span class="cmd-label">Range</span>
+      <span class="cmd-value">{{ dateRangeLabel }}</span>
+    </div>
+
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 8px; z-index: 2; position: relative;">
+      <span style="width:8px; height:8px; border-radius:50%; background:#a855f7; display:inline-block; animation: pulse-glow 2s ease-in-out infinite;"></span>
+      <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted);">Live Data</span>
+    </div>
   </div>
 </div>
+
 
 <div class="p-6 space-y-6">
   <!-- Summary Cards -->

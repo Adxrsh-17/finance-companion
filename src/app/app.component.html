@@ -1,7 +1,4 @@
 <div class="flex h-screen overflow-hidden">
-  <!-- Full-page particle canvas -->
-  <canvas id="bgParticles"></canvas>
-  
   <!-- Toast Component -->
   <app-layout>
     <!-- Sidebar: fixed width, never shrinks -->
@@ -49,8 +46,6 @@
       <!-- User Section - ALWAYS VISIBLE AT BOTTOM -->
       <div class="p-4 border-t border-white/10 mt-auto">
         <div class="sidebar-user-panel">
-          <canvas id="sidebarParticleCanvas" class="panel-canvas"></canvas>
-          
           <div class="panel-inner">
             <!-- Avatar + name row -->
             <div class="panel-identity">
@@ -99,10 +94,10 @@
           <div class="flex items-center gap-2">
             <div class="relative">
               <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white glow"
-                   style="background: linear-gradient(135deg, #06b6d4, #7c3aed);">
+                   style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                 {{ currentUser()?.avatar || 'AP' }}
               </div>
-              <div class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-950"></div>
+              <div class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-violet-500 border-2 border-white dark:border-slate-950"></div>
             </div>
           </div>
         </div>
@@ -120,7 +115,4 @@
   <div class="toast-container">
     <app-toast></app-toast>
   </div>
-
-  <!-- Full-page particle canvas -->
-  <canvas id="bgParticles"></canvas>
 </div>

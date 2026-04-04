@@ -37,7 +37,7 @@ const IncomeExpenseChart: React.FC = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+            <div className="h-3 w-3 rounded-full bg-violet-500"></div>
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Income</span>
           </div>
           <div className="flex items-center gap-2">
