@@ -8,15 +8,13 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Chart.js](https://img.shields.io/badge/Chart.js-4.5-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org)
-[![Netlify](https://img.shields.io/badge/Netlify-Live-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://agent-69d1f4cecf84307613c--finance-companion-app.netlify.app/login)
+[![Netlify](https://img.shields.io/badge/Netlify-Live-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://wealthgridapp.netlify.app/login)
 
-**[🔗 Live Demo]((https://wealthgridapp.netlify.app/login))** &nbsp;|&nbsp; **[⬡ GitHub Repository](https://github.com/Adxrsh-17/finance-companion)**
+**[🔗 Live Demo](https://wealthgridapp.netlify.app/login)** &nbsp;|&nbsp; **[⬡ GitHub Repository](https://github.com/Adxrsh-17/finance-companion)**
 
 *Adarsh Pradeep · ads.vibgyor.17@gmail.com*
 
 </div>
-
----
 
 ## 📋 Table of Contents
 
