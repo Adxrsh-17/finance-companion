@@ -1,5 +1,5 @@
 /* ============================================
-   ZORVYN LOGIN PAGE — Two-Panel Premium Design
+   WEALTH GRID LOGIN PAGE — Two-Panel Premium Design
    ============================================ */
 
 :host { display: block; height: 100vh; }
@@ -74,7 +74,7 @@
   margin-bottom: 20px;
   box-shadow: 0 12px 32px -6px rgba(124,58,237,0.6);
 }
-.lp-logo-z {
+.lp-logo-wg {
   font-size: 32px;
   font-weight: 900;
   color: white;

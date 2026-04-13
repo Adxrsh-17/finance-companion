@@ -40,9 +40,9 @@ import { DataService } from '../services/data.service';
           <!-- Logo Section -->
           <div class="logo-section">
             <div class="logo-wrapper">
-              <div class="logo-icon">Z</div>
+              <div class="logo-icon">WG</div>
               <div class="logo-text">
-                <div class="logo-title">Zorvyn</div>
+                <div class="logo-title">Wealth Grid</div>
                 <div class="logo-subtitle">Technologies</div>
               </div>
             </div>
@@ -120,7 +120,7 @@ import { DataService } from '../services/data.service';
           <div class="header-content">
             <!-- LEFT: Page title only -->
             <div class="header-title-section">
-              <h1 class="header-title">Zorvyn - Your Financial Companion</h1>
+              <h1 class="header-title">Wealth Grid - Your wallet, powered by intelligence</h1>
             </div>
 
             <!-- RIGHT: All header elements -->

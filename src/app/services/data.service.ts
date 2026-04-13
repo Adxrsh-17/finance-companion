@@ -1,5 +1,7 @@
-import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { BehaviorSubject, catchError, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Transaction {
   id: string;
@@ -30,6 +32,13 @@ export interface Permission {
   actions: ('read' | 'write' | 'delete' | 'admin')[];
 }
 
+interface BackendBootstrapResponse {
+  users: Array<Omit<User, 'lastLogin'> & { lastLogin: string }>;
+  currentUserId?: string;
+  transactions: Transaction[];
+  permissions?: Permission[];
+}
+
 export const CATEGORIES = {
   income: ['Salary', 'Freelance', 'Investment', 'Business', 'Rental', 'Other Income'],
   expense: ['Food & Dining', 'Transportation', 'Shopping', 'Entertainment', 'Bills & Utilities', 'Healthcare', 'Education', 'Travel', 'Insurance', 'Other']
@@ -52,6 +61,7 @@ export const MERCHANTS = {
   providedIn: 'root'
 })
 export class DataService {
+  private readonly http = inject(HttpClient);
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   private readonly transactionsSubject = new BehaviorSubject<Transaction[]>([]);
   private readonly usersSubject = new BehaviorSubject<User[]>([]);
@@ -74,12 +84,68 @@ export class DataService {
   }
 
   public initializeData() {
+    if (environment.apiBaseUrl.trim()) {
+      this.loadBootstrapDataFromApi();
+      return;
+    }
+
+    this.initializeMockData();
+  }
+
+  public refreshFromBackend() {
+    if (!environment.apiBaseUrl.trim()) {
+      return;
+    }
+    this.loadBootstrapDataFromApi();
+  }
+
+  private loadBootstrapDataFromApi() {
+    this.http
+      .get<BackendBootstrapResponse>(`${environment.apiBaseUrl.replace(/\/$/, '')}/bootstrap`)
+      .pipe(catchError(() => of(null)))
+      .subscribe((bootstrap) => {
+        if (!bootstrap?.users?.length || !bootstrap?.transactions?.length) {
+          this.initializeMockData();
+          return;
+        }
+
+        const users: User[] = bootstrap.users.map((user) => ({
+          ...user,
+          lastLogin: new Date(user.lastLogin),
+        }));
+
+        const transactions = [...bootstrap.transactions].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
+
+        const currentUser =
+          users.find((user) => user.id === bootstrap.currentUserId) ?? users[0] ?? null;
+
+        this.users.set(users);
+        this.usersSubject.next(users);
+
+        this.transactions.set(transactions);
+        this.transactionsSubject.next(transactions);
+
+        this.currentUser.set(currentUser);
+        this.currentUserSubject.next(currentUser);
+
+        if (bootstrap.permissions?.length) {
+          this.permissions.set(bootstrap.permissions);
+          this.permissionsSubject.next(bootstrap.permissions);
+        } else if (currentUser) {
+          this.updatePermissions(currentUser.role);
+        }
+      });
+  }
+
+  private initializeMockData() {
     // Generate sample users - ONLY 2 ROLES
     const sampleUsers: User[] = [
       {
         id: '1',
         name: 'Adarsh Pradeep',
-        email: 'adarsh@zorvyn.com',
+        email: 'adarsh@wealthgrid.com',
         role: 'administrator' as UserRole,
         avatar: 'AP',
         department: 'IT',
@@ -88,7 +154,7 @@ export class DataService {
       {
         id: '2',
         name: 'Sarah Johnson',
-        email: 'sarah@zorvyn.com',
+        email: 'sarah@wealthgrid.com',
         role: 'user' as UserRole,
         avatar: 'SJ',
         department: 'Finance',
@@ -134,7 +200,7 @@ export class DataService {
       type: 'income',
       description: 'Monthly Salary',
       status: 'completed',
-      merchant: 'Zorvyn Inc.',
+      merchant: 'Wealth Grid Inc.',
       reference: `SAL-${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}`
     });
 

@@ -28,13 +28,13 @@ export class LoginComponent {
   });
 
   private readonly mockUsers: Record<string, { password: string; role: UserRole; name: string; dataRole: User['role'] }> = {
-    'admin@zorvyn.com': {
+    'admin@wealthgrid.com': {
       password: 'admin123',
       role: 'admin',
       name: 'Admin User',
       dataRole: 'administrator',
     },
-    'viewer@zorvyn.com': {
+    'viewer@wealthgrid.com': {
       password: 'viewer123',
       role: 'viewer',
       name: 'Viewer User',
@@ -66,7 +66,7 @@ export class LoginComponent {
 
     setTimeout(() => {
       if (!account || account.password !== password) {
-        this.loginError = 'Invalid credentials. Try admin@zorvyn.com/admin123 or viewer@zorvyn.com/viewer123.';
+        this.loginError = 'Invalid credentials. Try admin@wealthgrid.com/admin123 or viewer@wealthgrid.com/viewer123.';
         this.isLoading = false;
         return;
       }

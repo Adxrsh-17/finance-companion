@@ -6,4 +6,7 @@
 export const environment = {
   production: false,
   insightsApiUrl: '' as string,
+  // Example: 'http://localhost:3000/api'
+  // Leave empty to keep using generated demo data.
+  apiBaseUrl: '' as string,
 };

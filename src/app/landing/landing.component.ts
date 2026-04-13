@@ -29,13 +29,13 @@ import { Router } from '@angular/router';
           <!-- Logo and Title -->
           <div class="mb-12 animate-fade-in-down">
             <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-3xl mb-6 shadow-2xl animate-pulse-slow">
-              <span class="text-4xl font-bold text-white">Z</span>
+              <span class="text-4xl font-bold text-white">WG</span>
             </div>
             <h1 class="text-6xl md:text-8xl font-bold text-white mb-4 animate-fade-in-up">
-              Zorvyn
+              Wealth Grid
             </h1>
             <p class="text-2xl md:text-3xl text-gray-300 mb-8 animate-fade-in-up animation-delay-200">
-              Your Financial Companion
+              Your wallet, powered by intelligence
             </p>
             <p class="text-xl text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-300">
               Smart financial management for the modern world. Track expenses, manage budgets, and gain insights into your financial health.

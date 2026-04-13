@@ -27,7 +27,7 @@ import { LayoutComponent } from './layout/layout.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements AfterViewInit {
-  title = 'Zorvyn Finance';
+  title = 'Wealth Grid Finance';
 
   private dataService = inject(DataService);
   private roleService = inject(RoleService);
