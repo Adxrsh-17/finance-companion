@@ -10,7 +10,7 @@
 [![Chart.js](https://img.shields.io/badge/Chart.js-4.5-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org)
 [![Netlify](https://img.shields.io/badge/Netlify-Live-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://agent-69d1f4cecf84307613c--finance-companion-app.netlify.app/login)
 
-**[🔗 Live Demo]([https://agent-69d1f4cecf84307613c--finance-companion-app.netlify.app/login](https://wealthgridapp.netlify.app/login))** &nbsp;|&nbsp; **[⬡ GitHub Repository](https://github.com/Adxrsh-17/finance-companion)**
+**[🔗 Live Demo]((https://wealthgridapp.netlify.app/login))** &nbsp;|&nbsp; **[⬡ GitHub Repository](https://github.com/Adxrsh-17/finance-companion)**
 
 *Adarsh Pradeep · ads.vibgyor.17@gmail.com*
 
